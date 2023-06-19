@@ -53,7 +53,7 @@ docker-compose build
 The first steps of the pipeline are implemented in the script "run.sh"
 current version from 2D coordinate to extracted LAZ
 ```console
-docker-compose run --rm georender /bin/bash -c "bash /usr/src/app/georender/run.sh"
+docker-compose run --rm georender /bin/bash -c "bash /usr/src/app/georender/run.sh   806527.23 6301959.36"
 ```
 
 # Programmer note

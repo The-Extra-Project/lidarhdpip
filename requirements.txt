@@ -1,0 +1,8 @@
+bacalhau_apiclient
+bacalhau_sdk
+geopandas
+shapely
+fastapi
+uvicorn[standard]
+pytest
+httpx

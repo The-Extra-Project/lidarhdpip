@@ -1,5 +1,5 @@
 # 3D rendering of a IGN LiDAR point cloud
-The goal of this project is to provide a 3D viewer for any  LiDAR HD point Cloud.
+The goal of this project is to provide a 3D viewer for any LiDAR HD point Cloud.
 This service will aviable through a twitter BOT
 - User reply a posal adress to the  bot
 - the bot reply with  the link and a screenshot of the point cloud
@@ -15,8 +15,43 @@ Each LiDAR HD tile can be downloaded her
 All files are referenced in a json file.
 
 # Detailled pipeline / tasks
+
+```mermaid
+---
+title: 3DP
+---
+flowchart LR
+    user["`frontend with geo-coordinated tweet`"]
+    confluentKafka["`submits the job for the bot`"]
+    connector["that triggers the command when there is B/W"]
+    botScript["`serverless script that
+    - takes the input job request
+    - calls the bacalau.py script to spin up new instance
+    - passes the params coordinates to compute the resulting 3D file output
+    `"]
+    user-->confluentKafka
+    confluentKafka-->connector
+    connector--> botScript
+    botScript --> job1
+    botScript --> job2
+    botScript --> ...
+    botScript --> jobN
+
+    job1 --> bacalau-publisher
+    job2 --> bacalau-publisher
+    jobN --> bacalau-publisher
+    bacalau-publisher-->connector:Streaminng-results
+    connector:Streaminng-results-->user
+
+
+
+```
+
 ## Twitter bot
-- ☐ : brainsorm on it
+-  This will be done by a serverless script that will be triggered by a confluent Kafka topic
+-  The script will take the input job request and will call the bacalau.py script to spin up new instance
+-  The script will pass the params coordinates to compute the resulting 3D file output file and store it to the backend.
+
 ## Local pipeline
 - ☑ Locate Tile according to a 2D coordinate and dumping informations 
   We parse the shapefile "TA_diff_pkk_lidarhd.shp" aviable in the IGN website and intersect the 

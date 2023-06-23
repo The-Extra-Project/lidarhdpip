@@ -6,6 +6,41 @@ from shapely.geometry import Polygon, LineString, Point
 import os
 from subprocess import Popen
 
+
+def create_bounding_box(latitude_max: int, lattitude_min: int, longitude_max: int, longitude_min: int):
+    """
+    Create a bounding box from 4 coordinates
+    """
+    return Polygon([(longitude_min, lattitude_min), (longitude_max, lattitude_min), (longitude_max, latitude_max), (longitude_min, latitude_max), (longitude_min, lattitude_min)])
+
+
+
+def get_tile_url_and_fname_from_polygon():
+    parser=argparse.ArgumentParser(description="take a bounded box details and produce a 3D tile")
+    parser.add_argument("lattitude max")
+    parser.add_argument("lattitude min")
+    parser.add_argument("longotude max")
+    parser.add_argument("longotude min")
+    args = parser.parse_args()
+    print( "Running with lat_max={}, lat_min={}, long_max={}, long_min={}".format( args.lattitude_max, args.lattitude_min, args.longotude_max, args.longotude_min ) )
+
+    fp = "/usr/src/app/georender/datas/TA_diff_pkk_lidarhd.shp"
+    data = gpd.read_file(fp)
+
+    polygonRegion = create_bounding_box(args.lattitude_max, args.lattitude_min, args.longotude_max, args.longotude_min)
+    out = data.intersects(polygonRegion)
+    res = data.loc[out]
+    laz_path = res["url_telech"].to_numpy()[0]#.replace("$","\$")#.replace("\\\\","\\")
+    dirname = res["nom_pkk"].to_numpy()[0]
+    fname = dirname + ".7z"
+
+    return laz_path, fname, dirname
+
+
+
+
+
+
 def get_tile_url_and_fname():
     parser=argparse.ArgumentParser(description="take a gps coordinate and produce a 3Dtile")
     parser.add_argument("coordX")

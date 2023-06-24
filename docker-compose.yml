@@ -1,6 +1,11 @@
 version: "3.9"
 services:
-  georender :
+  georender:
     build: 
       context: .
       dockerfile: Dockerfile-pdal
+    image: lxet/lidar_geocoordinate
+
+  confluent-kafka:
+    image: confluentinc/cp-kafka
+

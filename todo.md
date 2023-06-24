@@ -63,3 +63,27 @@ faire un deuxieme pipeline de crop avec des chunk qui fit dans la memoire dispo
 
 #### Vps requirement
 
+
+
+
+## Dhruv Side: 
+
+
+Simple workflow : 
+
+1.input (coordinates, identification) --> Event-Consumer (Confluent-kafka-serverless) --> bacalau-cli (with the docker image).
+
+
+
+tasks:
+
+- [X] Containerize the docker image (Dockerfile-pdal and georender), change the API endpoints and standardise with tests.
+- [X] Similar w/ cgal
+- [X]  bacalau deployment script 
+- [] confluent kafka streaming
+- [ ] full demo.
+
+
+
+
+

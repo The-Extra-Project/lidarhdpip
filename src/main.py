@@ -5,7 +5,7 @@ import json
 from shapely.geometry import Polygon, LineString, Point
 import os
 from subprocess import Popen
-
+import requests
 
 def create_bounding_box(latitude_max: int, lattitude_min: int, longitude_max: int, longitude_min: int):
     """
@@ -23,6 +23,7 @@ def get_tile_url_and_fname_from_polygon():
     parser.add_argument("longotude min")
     args = parser.parse_args()
     print( "Running with lat_max={}, lat_min={}, long_max={}, long_min={}".format( args.lattitude_max, args.lattitude_min, args.longotude_max, args.longotude_min ) )
+
 
     fp = "/usr/src/app/georender/datas/TA_diff_pkk_lidarhd.shp"
     data = gpd.read_file(fp)

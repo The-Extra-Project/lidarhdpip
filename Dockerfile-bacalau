@@ -1,0 +1,7 @@
+FROM python:3.11
+
+WORKDIR /usr/app/
+COPY ./src/requirements.txt ./usr/app/requirements.txt
+COPY ./src/bacalau.py /usr/app/bacalau.py
+RUN pip3 install -r ./usr/app/requirements.txt
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

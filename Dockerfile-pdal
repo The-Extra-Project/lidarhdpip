@@ -7,8 +7,9 @@ FROM pdal/pdal
 
 
 WORKDIR /usr/src/app
-COPY ./ /usr/src/app/georender/
+COPY ./src/main.py /usr/src/app/georender/
 COPY ./run.sh /usr/src/app/georender/run.sh
+COPY ./src/requirements.txt /usr/src/app/georender/requirements.txt
 RUN   --mount=type=cache,target=/var/cache/apt apt-get update && apt-get install -y git wget jq p7zip-full --assume-yes
 
 RUN  --mount=type=cache,target=/var/cache/apt cd /tmp/ \ 
@@ -19,11 +20,9 @@ RUN --mount=type=cache,target=/var/cache/apt cd /usr/src/app/ \
     && git clone https://github.com/mfbonfigli/gocesiumtiler.git \
     && cd gocesiumtiler && export CGO_LDFLAGS="-g -O2 -lm" && /usr/local/go/bin/go build
 
-
 RUN --mount=type=cache,target=/var/cache/apt apt-get update \
     && pip install  --upgrade pip  \
     && /opt/conda/bin/pip3 install geopandas \
     && /opt/conda/bin/pip3 install -r /usr/src/app/georender/requirements.txt
-
 
 ENTRYPOINT [ "/bin/bash", "-l", "-c" , "./usr/src/app/georender/run.sh" ]

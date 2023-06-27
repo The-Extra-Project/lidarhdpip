@@ -91,6 +91,11 @@ current version from 2D coordinate to extracted LAZ
 docker-compose run --rm georender /bin/bash -c "bash /usr/src/app/georender/run.sh"
 ```
 
+## setting up the confluent_kafka pipeline:
+there can be two ways
+
+    - Setup the [confluent-cloud]() enviornment .
+    - Fetch the API keys and other parameters and store in the `client.properties`.
 # Programmer note
 ## Copy file inside running container
 ```console

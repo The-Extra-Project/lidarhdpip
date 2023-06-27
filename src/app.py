@@ -1,19 +1,22 @@
 """
 frontend for users to download the formatted sns file
 
-credits to:
+usage:
 - https://github.com/tulasinnd/Twitter-scraping-with-snscrape-and-streamlit/blob/main/Twitter_Scraper.py
+for the idea of using snscrape.
 
-for the idea of using snscrape
 """
-
+import time
 import streamlit as st
-import snscrape.modules.twitter as sntwitter
+#import snscrape.modules.twitter as sntwitter
 import pandas as pd
-from typing import Mapping
+import requests
 from producers.twitter_producer import produce_Tweet_details
-resulting_tweets = pd.DataFrame()
+from .tweepy import TwitterAccess
+import os 
 
+
+resulting_tweets = pd.DataFrame()
 request_number = 0
 
 ## stores the maps along.
@@ -30,6 +33,31 @@ def latency(sec: int):
         time.sleep(1)
     return False
 
+
+def submitJob(request_number, params):
+    """
+    submits the job to the kafka queue.
+    """
+    button = st.button("submit job")
+    if button:
+        try:
+            produce_Tweet_details()
+            st.success("Job submitted successfully")
+        except Exception as e:
+            print(e)
+            st.error("kafka error: job didnt got submitted ")
+    
+
+def get_env_variables():
+  """Gets the env configuration variables."""
+  env_variables = {}
+  for key, value in os.environ.items():
+    env_variables[key] = value
+  return env_variables
+
+
+
+
 def main():
     st.title("georender: download 3D geospatial database from algorithms running on web3")
     st.text("add your twitter handle name, select the required geo-coordinates and then get your shp file ready")
@@ -45,17 +73,21 @@ def main():
             y_coord = st.text_input("Y coordinates")
 
     params= [x_coord, y_coord]
-    try:
-        while latency(100):
-            print("waiting for pushing the "+ str(request_number) + " request" + "to queue")
-        
-        produce_Tweet_details(request_number,params)     
+    ## user before needs to set the env variables files.
+    env_vars = get_env_variables()
+    with st.button("submit details"):
+        try:
+            if user_name:
+                submitJob(request_number, params)
+                tweepyObject = TwitterAccess(env_vars["ACCESS_TOKEN"], env_vars["ACCESS_TOKEN_SECRET"], env_vars["CONSUMER_KEY"], env_vars["CONSUMER_SECRET"])
+                tweepyObject.write_tweets(x_coord + y_coord)
+                st.success("Job submitted successfully")
+            else:
+                st.error("please enter the user name")
+        except Exception as e:
+            st.error(f"Too many requests")
+            st.stop()
 
-    #   resulting_tweets
-        st.write("job submitted")
-    except Exception as e:
-        st.error(f"Too many requests")
-        st.stop()
-        
+
 if __name__ == "__main__":
     main()

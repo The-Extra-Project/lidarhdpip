@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException
 from model import JobComputation, JobResults
 """
 bacalau script that deploys the georender dockerised container on the bacalau.
-this will be called by the kafka topic once there is bandwidth available
+this will be called by the kafka topic once there is bandwidth available.
 """
 
 from bacalhau_apiclient.models.deal import Deal
@@ -21,12 +21,7 @@ from bacalhau_sdk.config import get_client_id
 
 from bacalhau_sdk.api import results, states
 
-
 app = FastAPI()
-
-
-
-
 
 @app.get('/compute/createJob')
 def createJobCoordinate(params: List[str],dockerImg: str,  clientId: str) -> int:

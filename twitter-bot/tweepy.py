@@ -3,11 +3,13 @@ from tweepy import API, Tweet, Stream, OAuthHandler
 '''
 script for interacting w/ the users tweets on the twitter. 
 
-to instantiate w/ the user's credentials, go to developer.twitter.com & get the following parameters
+to instantiate w/ the user's credentials, go to developer.twitter.com & get the following parameters from developer.twitter.com
 access_token_key
 access_token_secret
 consumer_key
 consumer_secret
+
+and then access from the command line:
 '''
 
 class TwitterAccess():

@@ -1,11 +1,10 @@
 version: "3.9"
-
 services:
-  # georender:
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile-pdal
-  #   image: lxet/lidar_geocoordinate
+  georender:
+    build: 
+      context: .
+      dockerfile: ./georender/Dockerfile.pdal
+    image: lxet/lidar_geocoordinate
 
   # kafka-broker:
   #   build: './src/kafka-service'
@@ -15,10 +14,10 @@ services:
   #   build: 
   #     context: .
   #     dockerfile: Dockerfile.kafka
-  bacalau:
-    build: 
-      context: .
-      dockerfile: Dockerfile-bacalau
+  # bacalau:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile-bacalau
     
 
   # twitter-bot:

@@ -6,8 +6,6 @@ from enum import Enum
 this script defines the python api response models and results.
 
 """
-
-
 class JobStatus(Enum):
     submitted = 1
     rejected = 2
@@ -18,7 +16,6 @@ class JobComputation(BaseModel):
     clientId: str
     name: str
     jobId: str
-
 
 
 class JobResults(BaseModel):

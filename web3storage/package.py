@@ -4,7 +4,6 @@ credits to the orignal author john-doe from https://github.com/xloem/py-w3storag
 
 """
 
-
 import datetime
 import requests
 

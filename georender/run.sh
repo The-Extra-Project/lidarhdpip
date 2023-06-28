@@ -7,4 +7,3 @@ LAS_NAME=$(cat filepath.txt | sed -e "s/\\$/\\\\$/g")
 echo "wget --user-agent="Mozilla/5.0" $LAS_NAME" > dl.sh
 source dl.sh
 7z x $(cat filename.txt)
-

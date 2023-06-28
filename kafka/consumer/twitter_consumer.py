@@ -26,7 +26,6 @@ def main():
     for message in consumer:
         #TODO: call the api method of bacalau with the 
         ## deserialize the consumed messages
-       params = message.value
         print(message.value)
         createJobCoordinate(params, "lxet/georender_bacalau","test")
         
@@ -36,10 +35,4 @@ if __name__ == "__main__":
 
 
 
-def details_information():
-
-
-
-
-
-
+    

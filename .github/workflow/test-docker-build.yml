@@ -1,0 +1,13 @@
+name: Test docker-compose build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the docker-compose stack
+        run: docker-compose build

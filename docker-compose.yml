@@ -14,10 +14,11 @@ services:
   #   build: 
   #     context: .
   #     dockerfile: Dockerfile.kafka
-  # bacalau:
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile-bacalau
+  
+  bacalau:
+    build: 
+      context: ./bacalau/
+      dockerfile: ./bacalau/Dockerfile.bacalau
     
 
   # twitter-bot:

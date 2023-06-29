@@ -9,5 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build the docker-compose stack
-        run: docker-compose build
+      - name: Build the bacalau service
+        run: docker-compose build bacalau
+      
+      - name: building the georender docker image
+        run: docker-compose  build georender
+
+

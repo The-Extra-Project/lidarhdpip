@@ -2,7 +2,7 @@ name: Test docker-compose build
 on:
   push:
     branches:
-      - main
+      - dev-adding-v0.1
 
 jobs:
   build:

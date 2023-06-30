@@ -11,3 +11,4 @@ confluent_kafka
 streamlit
 snscrape
 configparser
+py7zr

@@ -23,4 +23,8 @@ RUN --mount=type=cache,target=/var/cache/apt apt-get update \
     && /opt/conda/bin/pip3 install geopandas \
     && /opt/conda/bin/pip3 install -r /usr/src/app/georender/requirements.txt
 
-ENTRYPOINT [ "/bin/bash", "-l", "-c" , "./usr/src/app/georender/run.sh" ]
+RUN streamlit run /usr/src/app/georender/app.py --server.port 8501 --server.address 0.0.0.0 --browser.serverAddress 0.0.0.0
+
+
+RUN uvicorn main:app 
+ #ENTRYPOINT [ "/bin/bash", "-l", "-c" , "./usr/src/app/georender/run.sh" ]

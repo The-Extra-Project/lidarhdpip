@@ -1,18 +1,13 @@
 """
-frontend for users to download the formatted sns file
-
-usage:
-- https://github.com/tulasinnd/Twitter-scraping-with-snscrape-and-streamlit/blob/main/Twitter_Scraper.py
-for the idea of using snscrape.
+frontend for users to access the 3D tile of the coordinate and then download it
 
 """
 import time
 import streamlit as st
-#import snscrape.modules.twitter as sntwitter
 import pandas as pd
 import requests
-from producers.twitter_producer import produce_Tweet_details
-from .tweepy import TwitterAccess
+from ..kafka.producers.twitter_producer import produce_Tweet_details
+from ..twitter_bot.tweepy import TwitterAccess
 import os 
 
 
@@ -64,10 +59,7 @@ def main():
 
     with st.sidebar:
         with st.expander("User-details" ,False):
-            user_name = st.text_input("user-name")
-            start_time = st.time_input("start time for tweet")
-            end_time = st.time_input("end time for the tweet timeline")
-            count = st.slider('How many tweets to scrape', 0, 1000, 5)
+            user_name = st.text_input("account user-name")
         with st.expander("add geo-coordinates", False):
             x_coord = st.text_input("X coordinates")
             y_coord = st.text_input("Y coordinates")
@@ -87,6 +79,7 @@ def main():
         except Exception as e:
             st.error(f"Too many requests")
             st.stop()
+
 
 
 if __name__ == "__main__":

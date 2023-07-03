@@ -4,12 +4,12 @@ import geopandas as gpd
 import json
 from shapely.geometry import Polygon, LineString, Point
 import os
-from subprocess import Popen
 import requests
 from web3StoragePackage import API 
 import uvicorn
 import py7zr
 import io
+import re
 
 app = FastAPI()
 
@@ -57,8 +57,6 @@ def get_tile_url_and_fname_from_polygon(lattitude_max:float, lattitude_min:float
 def get_tile_url_and_fname(coordX:float, coordY:float, fp_cid:str):
     print( "Running with X={}, Y={}".format( coordX, coordY ))
 
-    #fp = "/usr/src/app/georender/datas/TA_diff_pkk_lidarhd.shp"
-    ##
     data = gpd.read_file(fp_cid)
     center = Point(coordX,coordY)
 
@@ -93,9 +91,9 @@ def generate_pdal_pipeline( dirname ):
     
     with open( "pipeline_gen.json", "w" ) as file_pipe_out:
         json.dump( pdal_pipeline, file_pipe_out )
+    
 
 
-@app.post("/unzip_files")
 def unzip_files(filename: list[str]):
     """
     this unzips the file stored from the get_url_fname.... method and then makes them downlodable on the user browser.
@@ -107,6 +105,43 @@ def unzip_files(filename: list[str]):
                 z.extractall(path="/temp"+ str(i))
     except Exception as e:
         print(e)
+
+
+@app.post("/run_georender_pipeline")
+def run_georender_pipeline(cid_filepath):
+    """ 
+    this merges the various .laz file (from the tile url and fname) and then extracts and then returns the final point cloud file in the form of.las file (which will be stored in the decentralised cloud).
+    
+    cid_filepath: this is the uri of the filenames that store the output of the processed files
+    """
+
+    filenames = []
+    response = open(requests.get(cid_filepath), 'r')
+    filereader = re.compile("s/\\$/\\\\$/g")
+
+    for fileName in response.readlines():
+        filenames.append(filereader.match(fileName))
+
+
+    ## downloading the files from the filename URI's that are extracted from the filepath.
+    for fileURI in fileName:
+        fileobj =   requests.get(fileURI)
+        w3.post_upload(fileobj.content)
+
+        unzip_files(fileURI)
+
+
+        
+    ## unzipping  the file in order to fetch the details 
+
+
+
+
+    
+
+
+
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app",log_level='info', port=1000)

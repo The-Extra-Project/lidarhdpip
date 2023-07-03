@@ -9,8 +9,9 @@ import requests
 from ..kafka.producers.twitter_producer import produce_Tweet_details
 from ..twitter_bot.tweepy import TwitterAccess
 import os 
+from ..web3storage.package import API
 
-
+## this is the format of storing the parameters 
 resulting_tweets = pd.DataFrame()
 request_number = 0
 
@@ -51,8 +52,6 @@ def get_env_variables():
   return env_variables
 
 
-
-
 def main():
     st.title("georender: download 3D geospatial database from algorithms running on web3")
     st.text("add your twitter handle name, select the required geo-coordinates and then get your shp file ready")
@@ -73,13 +72,18 @@ def main():
                 submitJob(request_number, params)
                 tweepyObject = TwitterAccess(env_vars["ACCESS_TOKEN"], env_vars["ACCESS_TOKEN_SECRET"], env_vars["CONSUMER_KEY"], env_vars["CONSUMER_SECRET"])
                 tweepyObject.write_tweets(x_coord + y_coord)
+                ## now storing the corresponding result of the execution in the cache.
+                ## for now i am trying to do that using ipfs.
+
+                
+
+
                 st.success("Job submitted successfully")
             else:
                 st.error("please enter the user name")
         except Exception as e:
             st.error(f"Too many requests")
             st.stop()
-
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev-adding-v0.1
+      - dev
 
 jobs:
   build:
@@ -13,6 +14,6 @@ jobs:
         run: docker-compose build bacalau
       
       - name: building the georender docker image
-        run: docker-compose  build georender
+        run: docker-compose build georender
 
 

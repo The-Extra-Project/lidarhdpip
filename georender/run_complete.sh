@@ -7,7 +7,6 @@ POS="$1 $2"
 
 python /usr/src/app/georender/src/main.py $POS
 
-## this will be done via the web3 storage.
 LAS_NAME=$(cat filepath.txt | sed -e "s/\\$/\\\\$/g")
 
 ## downloading this file in the browser format 

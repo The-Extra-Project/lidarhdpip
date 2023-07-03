@@ -1,7 +1,7 @@
 FROM confluentinc/cp-kafka
 
 
-WORKDIR /usr/app/kafka/
+WORKDIR /usr/app/
 
 
 COPY ./src/consumer/ /usr/app/kafka/
@@ -12,4 +12,4 @@ COPY ./src/kafka_config.py /usr/app/kafka/
 RUN python3 -m pip install --upgrade pip
 RUN  pip3 install -r /usr/app/kafka/requirements.txt
 
-## installing the require
+

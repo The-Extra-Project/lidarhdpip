@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from georender import app
+from streamlit_app import app
 
 
 testclient = TestClient(app)

@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import List
 from enum import Enum
+from typing import Union, List
+
 
 """
 this script defines the python api response models and results.
@@ -16,6 +18,9 @@ class JobComputation(BaseModel):
     clientId: str
     name: str
     jobId: str
+
+class JsonReturnFormat(BaseModel):
+    json_format: Union[dict, str] 
 
 
 class JobResults(BaseModel):

@@ -5,31 +5,27 @@ services:
       context: .
       dockerfile: ./georender/Dockerfile.pdal
     image: lxet/lidar_geocoordinate
+    # depends_on:
+    #   - bacalau
+    
+    volumes:
+      - /usr/app/georender/:/usr/app/georender/
 
-  # kafka-broker:
-  #   build: './src/kafka-service'
-  #   image: confluentinc/cp-kafka
-  
-  # kafka-producer:
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile.kafka
-  
+    ports:
+      - 8501
+
+
   bacalau:
     build: 
-      context: ./bacalau/
+      context: ./bacalau
       dockerfile: ./bacalau/Dockerfile.bacalau
+    image: lxet/las_processing_bacalau
     
 
-  # twitter-bot:
-  #   build: 
-  #     context: ./src/
-  #     dockerfile: Dockerfile-tweepy
-
-  # bacalau-compute:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile-bacalau
+  twitter-bot:
+    build: 
+      context: ./src/
+      dockerfile: Dockerfile-tweepy
 
 
 

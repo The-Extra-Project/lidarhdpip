@@ -2,7 +2,8 @@ import requests
 from typing import Union, List
 import json
 from fastapi import FastAPI, HTTPException
-from model import JobComputation, JobResults
+from model import JobComputation, JobResults, JsonReturnFormat
+import uvicorn
 """
 bacalau script that deploys the georender dockerised container on the bacalau.
 this will be called by the kafka topic once there is compute bandwidth available.
@@ -24,13 +25,14 @@ from bacalhau_sdk.api import results, states
 app = FastAPI()
 
 @app.get('/compute/createJob')
-def createJobCoordinate(params: List[str],dockerImg: str,  clientId: str) -> int:
+def createJobBacalau(dockerImg: str) -> JsonReturnFormat:
     '''
     pulls the docker image of georender and executes it on the bacalau compute network
+    
+    for example, in the case of the georender, it will be as follows:
     params[0]: is the X coordinate of the geometric coordinates
     params[1]: is the Y coordinate of the geometric coordinates
-    dockerImg: name of the registry file that 
-    clientId: is the parameter that maps the client details 
+    dockerImg: name of the registry file that is hosted in the dockerhub
     '''
 
 
@@ -43,7 +45,6 @@ def createJobCoordinate(params: List[str],dockerImg: str,  clientId: str) -> int
         publisher_spec= PublisherSpec("ipfs"),
         docker=JobSpecDocker(
             image=dockerImg,
-            entrypoint=[params[0],params[1]],
         ),
         language=JobSpecLanguage(job_context=None),
         wasm=None,
@@ -66,7 +67,7 @@ def createJobCoordinate(params: List[str],dockerImg: str,  clientId: str) -> int
         print(job_json_details)
             #jobresults = JobComputation(job)
 
-        return job_json_details["job"]["metadata"]["id"]
+        return job_json_details
     except SystemError as s:
         print(s)
     
@@ -84,7 +85,7 @@ def listJobs(clientId: str) -> JobResults:
 
 
 @app.get("/compute/getJobResults")
-def getJobResults(clientId: str, jobId: str) -> any:
+def getJobResults(clientId: str, jobId: str):
     """
     fetches the result of the jobs that are executed for the given client and stored in ipfs.
     this will be called by the trigger bot periodically to get the results.
@@ -98,6 +99,11 @@ def getJobResults(clientId: str, jobId: str) -> any:
     except HTTPException as h:
         print(h)
 
+
+
+
+if  __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 

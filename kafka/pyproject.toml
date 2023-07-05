@@ -1,0 +1,5 @@
+[tool.poetry]
+name="kafka"
+version="0.1.0"
+description = "provides the scripts to geenrate messages to broker or to fetch those messages for execution"
+authors=["Dhruv Malik"]

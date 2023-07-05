@@ -6,17 +6,18 @@ import time
 import streamlit as st
 import pandas as pd
 import requests
-from ..kafka.producers.twitter_producer import produce_Tweet_details
-from ..twitter_bot.tweepy import TwitterAccess
-import os 
-from ..web3storage.package import API
+from kafka.producers.twitter_producer import produce_Tweet_details
+from kafka.model import TwitterProducerMessage
+from twitterbot.tweepy import TwitterAccess
 
+import os 
+from web3storage.package import API
+import py3dtiles
 ## this is the format of storing the parameters 
 resulting_tweets = pd.DataFrame()
 request_number = 0
 
-## stores the maps along.
-
+st.set_page_config(layout="wide")
 
 def latency(sec: int):
     """
@@ -30,15 +31,22 @@ def latency(sec: int):
     return False
 
 
-def submitJob(request_number, params):
+def submitJob(request_number: int, params: TwitterProducerMessage) -> bool:
     """
     submits the job to the kafka queue.
+
+    input: 
+    request_number: is the optional identification job request.
+    params: is the input parameters that are to be passed to send the requests. 
+
+
     """
     button = st.button("submit job")
     if button:
         try:
             produce_Tweet_details()
             st.success("Job submitted successfully")
+            return True
         except Exception as e:
             print(e)
             st.error("kafka error: job didnt got submitted ")

@@ -8,6 +8,7 @@ FROM pdal/pdal
 
 WORKDIR /usr/src/app
 COPY . ./usr/src/app/georender/
+COPY ./requirements.txt ./usr/src/app/georender/requirements.txt
 RUN   --mount=type=cache,target=/var/cache/apt apt-get update && apt-get install -y git wget jq p7zip-full --assume-yes
 
 RUN  --mount=type=cache,target=/var/cache/apt cd /tmp/ \ 
@@ -23,7 +24,7 @@ RUN --mount=type=cache,target=/var/cache/apt apt-get update \
     && /opt/conda/bin/pip3 install geopandas \
     && /opt/conda/bin/pip3 install -r /usr/src/app/georender/requirements.txt
 
-RUN streamlit run /usr/src/app/georender/app.py --server.port 8501 --server.address 0.0.0.0 --browser.serverAddress 0.0.0.0
+RUN streamlit run /usr/src/app/georender/app.py --server.port 8501 --server.address 0.0.0.0 
 
 
 RUN uvicorn main:app 

@@ -1,0 +1,5 @@
+[tool.poetry]
+name="twitterbot"
+version="0.1.0"
+description = "wrapper around tweepy in order to tweet a geo-cordinates"
+authors=["Dhruv Malik"]

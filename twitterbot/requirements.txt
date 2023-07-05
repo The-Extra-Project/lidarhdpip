@@ -1,0 +1,5 @@
+python-decouple==3.8
+jinja2
+mongoengine
+fastapi_jwt_auth
+uvicorn

@@ -4,12 +4,12 @@ FROM confluentinc/cp-kafka
 WORKDIR /usr/app/
 
 
-COPY ./src/consumer/ /usr/app/kafka/
-COPY ./src/producers/ /usr/app/kafka/
-COPY ./src/requirements.txt /usr/app/kafka/
-COPY ./src/kafka_config.py /usr/app/kafka/
+COPY ./consumer/ /usr/app/kafka/
+COPY ./producers/ /usr/app/kafka/
+COPY ./requirements.txt /usr/app/kafka/
+COPY ./kafka_config.py /usr/app/kafka/
 
 RUN python3 -m pip install --upgrade pip
 RUN  pip3 install -r /usr/app/kafka/requirements.txt
 
-
+RUN uvicorn  kafka.consumer.twitter_bot_consumer:app --host 127.0.0.1 --port 8001 --reload

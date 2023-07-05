@@ -75,13 +75,17 @@ Simple workflow :
 
 
 
-tasks:
+## Tasks for v1 release:
 
 - [X] Containerize the docker image (Dockerfile-pdal and georender), change the API endpoints and standardise with tests.
+
+
+datas/
+- [] give possiblity for user , based on the input coordinates , to select the specific category of the .shp file as provided by the [geoservices](https://geoservices.ign.fr/lidarhd#telechargement) (right now we are restricted only in the specific geographic area). 
+
 - [X] Similar w/ cgal
 - [X]  bacalau deployment script 
-- [] confluent kafka streaming
-- [ ] full demo.
+
 
 
 

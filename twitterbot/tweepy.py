@@ -1,5 +1,9 @@
+import traceback
 from tweepy.streaming import StreamListener
-from tweepy import API, Tweet, Stream, OAuthHandler
+from tweepy import API, OAuthHandler
+from fastapi import FastAPI
+from model import User
+
 '''
 script for interacting w/ the users tweets on the twitter. 
 

@@ -1,0 +1,14 @@
+[tool.poetry] 
+name="lidar-streamlit-app"
+version="0.1.0"
+description = "streamlit application for lidar HD demo"
+authors=["Dhruv Malik"]
+
+[tool.poetry.dependencies]
+py3dtiles = ">=5.0.0"
+streamlit = ">=1.24.0"
+kafka = {path = "../kafka/", develop = false}
+twitterbot = {path = "../twitterbot/", develop = false}
+web3storage = {path = "../web3storage", develop = false}
+python =  ">=2.7,<2.8 || >=3.4,<4 "
+[tool.poetry.dev-dependencies]

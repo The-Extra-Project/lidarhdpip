@@ -24,9 +24,16 @@ services:
 
   twitter-bot:
     build: 
-      context: ./src/
-      dockerfile: Dockerfile-tweepy
+      context: ./twitter_bot/
+      dockerfile: ./twitter_bot/Dockerfile.tweepy
 
+  streamlit_app:
+    build:
+      context: ./streamlit_app/
+      dockerfile: ./streamlit_app/Dockerfile.streamlit
+    depends_on:
+      - kafka
+      - twitter_bot
 
 
 

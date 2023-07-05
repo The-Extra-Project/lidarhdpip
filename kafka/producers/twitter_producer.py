@@ -1,26 +1,20 @@
-from confluent_kafka import Producer
+from confluent_kafka import KafkaException
 from pydantic import BaseModel
 from ..kafka_config import read_ccloud_config
-from producer_template import AsyncProducer
+import uvicorn
+from async_producer_template import AsyncProducer
 from fastapi import FastAPI
-# stores the details of the request w/ the corresponding parameters
-mappedTweets = map()
-
-count = 0
-
+from ..model import TwitterProducerMessage
+import asyncio
 
 app = FastAPI()
 
 
-class tweet_responses():
-    coordX: int
-    coordY: int
-    tweet_id: int
-
 @app.on_event("startup")
 async def startup_event():
     global producer
-    producer = AsyncProducer({"bootstrap.servers": "localhost:9092"})
+    producer = AsyncProducer(configs=read_ccloud_config("../client.properties"))
+
 
 
 @app.on_event("shutdown")
@@ -28,24 +22,23 @@ def shutdown_event():
     producer.close()
 
 
-def get_params(request_number: int):
-    return mappedTweets[request_number]
-
-def produce_Tweet_details(request_number: int,params: list[int]):
+# def get_params(request_number: int):
+#     return mappedTweets[request_number]
+@app.post("/produce_tweet")
+def produce_Tweet_details(tweet_params: TwitterProducerMessage):
     """
-    creates a request that is stored into the broker queue
-    - client_request parameters
-    - parameters in order to execute the georender: X and Y coordinates    
+    creates a request that is stored into broker.
     """
-    
-    producer = Producer(read_ccloud_config("../client.properties"))
-    producer.produce("tweet-producer" , key=request_number, value=params)
-    count+=1
-    write_params(count,params=params)
+    try:
+        returnvalue = producer.produce("twitter-coord", value= tweet_params)
+        return {
+            "timestamp": returnvalue.timestamp()
+        }
+    except KafkaException as e:
+        print(e)
+        return HTTPException(status_code=500, detail=e.args[0].str())
     
 
-def write_params(request_number: int, params: list(str) ):
-     mappedTweets[request_number] = params
-
-def read_params(request_number: int):
-    return mappedTweets[request_number]
+    
+if __name__ == '__main__':
+    uvicorn.run(app, host='127.0.0.1', port=8000)

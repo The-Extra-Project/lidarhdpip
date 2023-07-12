@@ -1,0 +1,24 @@
+{
+	"root": true,
+	"parserOptions": {
+        "ecmaVersion": 2020
+	},
+
+	"extends": ["plugin:jest/recommended", "./node_modules/eslint-config-mdcs/index.js"],
+	"plugins": [ "jest" ],
+
+	"rules": {
+		"no-unused-vars": [ 1, { "args": "none" } ],
+		"no-throw-literal": [
+			"error"
+		],
+		"prefer-const": [
+			"error",
+			{
+				"destructuring": "any",
+				"ignoreReadBeforeAssign": false
+			}
+		],
+		"quotes": [ "error", "single" ]
+	}
+}

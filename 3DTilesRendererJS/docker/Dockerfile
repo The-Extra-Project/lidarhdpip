@@ -1,0 +1,24 @@
+
+
+FROM node:20.3.0
+
+
+WORKDIR /usr/src/app/3DTilesRendererJS
+
+# Selecting both package.json and package-lock.json
+#COPY package*.json ./
+
+#RUN npm install
+# If you are building your code for production
+# RUN npm ci --omit=dev
+
+# Bundle app source
+COPY ./ /usr/src/app/3DTilesRendererJS
+
+RUN npm install
+
+# So we can acces app port from host
+EXPOSE 9080
+
+# or parcel watch example/*.html --out-dir ./example/dev-bundle/ --public-url . --no-cache #exited with code SIGINT
+CMD [ "npm", "start" ]

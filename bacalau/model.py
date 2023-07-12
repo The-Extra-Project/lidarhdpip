@@ -16,8 +16,8 @@ class JobStatus(Enum):
 
 class JobComputation(BaseModel):
     clientId: str
-    name: str
-    jobId: str
+    coordX: str
+    coordY: str
 
 class JsonReturnFormat(BaseModel):
     json_format: Union[dict, str] 

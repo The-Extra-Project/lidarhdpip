@@ -1,5 +1,3 @@
-bacalhau_apiclient
-bacalhau_sdk
 geopandas
 shapely
 fastapi
@@ -12,3 +10,5 @@ streamlit
 snscrape
 configparser
 py7zr
+w3storage
+pyproj

@@ -7,11 +7,11 @@ import streamlit as st
 import pandas as pd
 import requests
 from kafka.producers.twitter_producer import produce_Tweet_details
+from confluent_kafka import Consumer, Producer, KafkaException
 from kafka.model import TwitterProducerMessage
-from twitterbot.tweepy import TwitterAccess
-
+from twitterbot.twitter_bot import TwitterAccess
+#from pages import 
 import os 
-from web3storage.package import API
 import py3dtiles
 ## this is the format of storing the parameters 
 resulting_tweets = pd.DataFrame()
@@ -38,7 +38,6 @@ def submitJob(request_number: int, params: TwitterProducerMessage) -> bool:
     input: 
     request_number: is the optional identification job request.
     params: is the input parameters that are to be passed to send the requests. 
-
 
     """
     button = st.button("submit job")

@@ -1,4 +1,4 @@
 py3dtiles
 streamlit
-kafka
- 
+confluent_kafka
+w3storage

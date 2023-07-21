@@ -12,3 +12,6 @@ configparser
 py7zr
 w3storage
 pyproj
+laspy
+line_profiler
+zmq

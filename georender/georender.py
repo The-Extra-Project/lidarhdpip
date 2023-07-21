@@ -13,35 +13,48 @@ from pyproj import Transformer
 from subprocess import check_call
 from typing import Iterator
 from subprocess import run
-load_dotenv()
 import logging
+from pathlib import path
+import logging
+from py3dtiles.tileset.tileset import TileSet
+from pathlib import Path
+logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
-global w3
-w3 = API(os.getenv("WEB3_TOKEN"))
+## TODO: put the file via w3 storage once the pipeline is working
+fp_cid:str = "/usr/src/app/georender/datas/TA_diff_pkk_lidarhd.shp" 
 
-def create_bounding_box(latitude_max: float, lattitude_min: float, longitude_max: float, longitude_min: float, cid_file: str):
+load_dotenv()
+
+# global w3
+
+# ## not secure, needs to be professionally defined.
+# w3 = API(os.getenv("WEB3_TOKEN"))
+# kafka = os.getenv("KAFKA_SECRET")
+# kafka_key= os.getenv("KAFKA_KEY")
+
+
+def create_bounding_box(latitude_max: float, lattitude_min: float, longitude_max: float, longitude_min: float):
     """
-    Create a bounding box from 4 coordinates
+    Create a bounding box from given boundations in lattitude,longitude formations.
     """
     return Polygon([(longitude_min, lattitude_min), (longitude_max, lattitude_min), (longitude_max, latitude_max), (longitude_min, latitude_max), (longitude_min, lattitude_min)])
 
-def get_tile_url_and_fname_from_polygon(lattitude_min, lattitude_max, longitude_max , longitude_min, cid_file:str = 'https://bafybeih4m6x6oxaojzfr27czxjbyhivduqlwj35jfczdvmawr2y6gsgonu.ipfs.w3s.link/TA_diff_pkk_lidarhd.shp' ):
+
+def get_tile_url_and_fname_from_polygon(lattitude_min, lattitude_max, longitude_max , longitude_min ):
     """
     function to return the file format in tile and directory from the polygon section
     
     """
-    
-    #fp_cid:str = "https://bafybeih4m6x6oxaojzfr27czxjbyhivduqlwj35jfczdvmawr2y6gsgonu.ipfs.w3s.link/TA_diff_pkk_lidarhd.shp" 
-    
     print( "Running with lat_max={}, lat_min={}, long_max={}, long_min={}, cid_file={}".format( lattitude_max, lattitude_min, longitude_max, longitude_min, cid_file ) )
 
     # here the file is stored already in the web3 storage along w/ the details like the time of upload .
     ## this needs to be modified to include possiblity 
     #cid_file = w3.post_upload(fp_cid)
-    fileReader = requests.get(cid_file, allow_redirects=True)
+    # fileReader = requests.get(fp_cid, allow_redirects=True)
 
-    data = gpd.read_file(cid_file)
-    
+    data = gpd.read_file(fp_cid)
+
     polygonRegion = create_bounding_box(lattitude_max,lattitude_min,longitude_max,longitude_min)
     out = data.intersects(polygonRegion)
     res = data.loc[out]
@@ -52,20 +65,22 @@ def get_tile_url_and_fname_from_polygon(lattitude_min, lattitude_max, longitude_
     return laz_path, fname, dirname
 
 
-def get_tile_url_and_fname(coordX:float, coordY:float, fp_cid:str):
+def get_tile_url_and_fname(coordX:float, coordY:float):
     """
     operates the algorithm in order to create tile (corresponding to the given point) along with the filename
-    coordX/Y: coordinates (in real number as degree) for the given region
-    
-    
+    coordX/Y: coordinates (in real number as degree) for the given region.
     """
-    
-
-    
     print( "Running with X={}, Y={}".format( coordX, coordY ))
 
-    shp_file = requests.get(fp_cid)
-    data = gpd.read_file(shp_file.content)
+    # shp_file_request = requests.get(fp_cid)
+    
+    # shpfile = open('./data/demo_content.shp', "wb")
+    
+    # for chunk in shp_file_request.iter_content():
+    #     shpfile.write(chunk)
+    # shpfile.close()  
+      
+    data = gpd.read_file(fp_cid)
     transformer = Transformer.from_crs( 'EPSG:4326', 'EPSG:2154' )
     coordX, coordY = transformer.transform( coordX, coordY )
 
@@ -79,7 +94,8 @@ def get_tile_url_and_fname(coordX:float, coordY:float, fp_cid:str):
 
     return laz_path, fname, dirname
 
-def get_user_files_recent(timeline):
+## TODO: add the web3 storage layer once the whole tileset pipeline is working
+# def get_user_files_recent(timeline):
     
     """
     it gets the CID's and the filepaths of the given user, 
@@ -126,16 +142,14 @@ def generate_pdal_pipeline( dirname ):
         pdal_pipeline['pipeline'].insert( 0, las_reader )
     
     with open( "./pipeline_gen.json", 'w') as file_pipe_out:
-        pipeline_objects = json.dump( pdal_pipeline, file_pipe_out )
-        file_pipe_out.write(pipeline_objects)
-        file_cid = w3.post_upload(file_pipe_out)
-        
+  
+        json.dump(pdal_pipeline, file_pipe_out)
+        # pipeline_objects = json.dump( pdal_pipeline, file_pipe_out )
+        # file_pipe_out.write(pipeline_objects)
+        # file_cid = w3.post_upload(file_pipe_out)
     
     
-    return file_cid
-
-    
-def run_georender_pipeline_point():
+def run_georender_pipeline_point(cliargs:any):
     """ 
     this merges the various .laz file (from the tile url and fname) and then extracts and then returns the final point cloud file in the form of.las file (which will be stored in the decentralised cloud).
     
@@ -146,24 +160,31 @@ def run_georender_pipeline_point():
     
     
     """
+    logging.log(msg="parameters input to the file", level=logging.DEBUG) 
+    print(cliargs)   
+
     args = argparse.ArgumentParser(description="runs the georender pipeline based on the given geometric point")
     args.add_argument("coordX")
     args.add_argument("coordY")
     args.add_argument("userprofile")
+
+    parsedargs = args.parse_args(args=cliargs)
     
 
-    laz_path, fname, dirname = get_tile_url_and_fname(args.coordX, args.coordY, args.userprofile )
+    os.mkdir("../data" + parsedargs.userprofile)
     
-    userprofile = "toto"
+    laz_path, fname, dirname = get_tile_url_and_fname(parsedargs.coordX, parsedargs.coordY, parsedargs.cid )
+    
+
     ## creating the destination profile
     
-    with open("./profile_template.json", 'r') as file_template_in:
+    with open("../georender/pipeline_template.json", 'r') as file_template_in:
         rendered_file = file_template_in.read()
     
-    template_cid = w3.post_upload(rendered_file)
+    #template_cid = w3.post_upload(rendered_file)
     
     ## this function refers the fils from the local storage for now: 
-    os.mkdir("../data/"+ userprofile)
+    os.mkdir("../data/"+ parsedargs.userprofile)
     
     # check in case if file is not downloaded in the local directory.
     if not os.path.isfile( fname ):
@@ -174,7 +195,7 @@ def run_georender_pipeline_point():
     
     generate_pdal_pipeline(dirname=dirname)
     ## storing the details of the mkdir 
-    os.mkdir( dirname + userprofile )
+    os.mkdir( dirname + parsedargs.userprofile )
     # todo : There should be further doc and conditions on this part
     #        Like understanding why some ign files have it and some don't
     # In case the WKT flag is not set :
@@ -184,40 +205,67 @@ def run_georender_pipeline_point():
         f.write( bytes( [17, 0, 0, 0] ) )
         f.close()
     check_call( ["pdal", "pipeline", "../pipeline_gen.json"] )
-    shutil.move( 'result.las', '../result.las' )
+    shutil.move( 'result.las', '../'+parsedargs.userprofile +'result.las' )
+    shutil.move( 'pipeline_gen.json', '../'+parsedargs.userprofile + 'pipeline_gen.json' )
+    logging.info("downloading the files ")
+
+
+def rendering_3D_tiles(filedir):
+    """
+    Renders the 3D tiles from the stored compute and get the result.
+    
+    filedir: is the place where the file is stored and is to be converted to the 3D rendering file. (usually will be in the usually from rhe /data/<username>)
+    """
+    ## ref: https://gitlab.com/Oslandia/py3dtiles
+    tileset = TileSet.from_file(Path(filedir))
+    
+    alltiles = (tileset.root_tile, *tileset.root_tile.get_all_children())
+    
+    for tile in alltiles:
+        if not tile.has_content():
+            logging.info("there is no content in the given section of the tile")
+        tile_content = tile.get_or_fetch_content(tileset.root_uri)
+        print(f"The tile {tile.content_uri} has a content of {type(tile_content)} type")
+        
+        
     
     
-def run_georender_pipeline_polygon():
     
-    args = argparse.ArgumentParser(description="runs the georender pipeline for the given bounded region defined by the points")
-    args.add_argument("lattitude_min") # lattitude_min,, , longitude_max
-    args.add_argument("lattitude_max")
-    args.add_argument("longitude_min")
-    args.add_argument("longitude_max")
     
-    laz_path, dirname, filename =  get_tile_url_and_fname_from_polygon(args.lattitude_min, args.lattitude_max, args.longitude_min, args.longitude_max)
+
+    
+# def run_georender_pipeline_polygon():
+    
+#     args = argparse.ArgumentParser(description="runs the georender pipeline for the given bounded region defined by the points")
+#     args.add_argument("lattitude_min") # lattitude_min,, , longitude_max
+#     args.add_argument("lattitude_max")
+#     args.add_argument("longitude_min")
+#     args.add_argument("longitude_max")
+    
+#     laz_path, dirname, filename =  get_tile_url_and_fname_from_polygon(args.lattitude_min, args.lattitude_max, args.longitude_min, args.longitude_max)
 
 
     # remaining as same as the previous function:
 
 
-def call_function(function_name, params: list[str]):
-    print(sys.argv)
+def call_function(function_name, params: any):
     if function_name == "run_georender_pipeline":
         run_georender_pipeline_point(params)                            
     elif function_name == "run_georender_pipeline_polygon":
-            pass
-            
+        run_georender_pipeline_polygon(params)
+
 
 """
 way of invoking this parameters
-
-python3 georender <<function-name>> [params]
+python3 georender  [params]
 """   
 def main(cliargs:any=None):
-    call_function("run_georender_pipeline_point",cliargs)
     
+    run_georender_pipeline_point(cliargs=cliargs)
+    #call_function("run_georender_pipeline_point",cliargs)
+
 if __name__ == "__main__":
     ## parameters that are to be added : coordX, coordY, 
-    main(sys.argv)
+    main(sys.argv[1:])
+   
    

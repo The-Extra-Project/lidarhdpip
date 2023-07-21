@@ -26,6 +26,4 @@ RUN --mount=type=cache,target=/var/cache/apt apt-get update \
 
 RUN streamlit run /usr/src/app/georender/app.py --server.port 8501 --server.address 0.0.0.0 
 
-
-RUN uvicorn main:app 
  #ENTRYPOINT [ "/bin/bash", "-l", "-c" , "./usr/src/app/georender/run.sh" ]

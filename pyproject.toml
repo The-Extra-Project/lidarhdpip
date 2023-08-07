@@ -1,0 +1,9 @@
+[tool.poetry]
+name = "lidarhd_pip"
+version = "0.1.0"
+description = "microservices application for rendering geospatial point cloud data into tiles"
+authors = ["Dhruv Malik<malikdhruv1994@gmail.com>"]
+
+
+[]
+

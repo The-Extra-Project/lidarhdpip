@@ -10,7 +10,7 @@ import sys
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
-from src.bots.Discord.kafkaMessages import kafka_producer_message , kafka_consumer
+from Discord.kafkaMessages import kafka_producer_message , kafka_consumer
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
         config = json.load(file)

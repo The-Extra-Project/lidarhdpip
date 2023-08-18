@@ -13,12 +13,17 @@ class JobStatus(Enum):
     rejected = 2
     completed = 3
 
-
-class JobComputation(BaseModel):
-    clientId: str
+class InputParametersPoint():
     coordX: str
     coordY: str
+    username: str
+    ipfs_image: str
 
+class JobComputation(BaseModel):
+    username: str
+    coordX: str
+    coordY: str
+    
 class JsonReturnFormat(BaseModel):
     json_format: Union[dict, str] 
 

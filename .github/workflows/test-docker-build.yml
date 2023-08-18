@@ -11,9 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build the bacalau service
-        run: docker-compose build bacalau
-      
-      - name: building the georender docker image
-        run: docker-compose build georender
-
-
+        run: docker-compose build bacalhau
+        
+      - name: building the bot service.
+        run: docker-compose circombot

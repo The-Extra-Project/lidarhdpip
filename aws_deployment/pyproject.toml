@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "aws-deployment"
+version = "0.1.0"
+description = "scripts that generate AWS cloud formation template to replicate the infrastructure for the given application"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "aws_deployment"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aws-cdk-lib = "2.92.0"
+constructs = ">=10.0.0,<11.0.0"
+pytest = "6.2.5"
+diagrams = "^0.23.3"
+graphviz = "^0.20.1"
+
+
+[tool.poetry.scripts]
+architecture = "aws-deployment:diagrams"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

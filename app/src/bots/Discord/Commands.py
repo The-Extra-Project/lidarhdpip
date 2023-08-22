@@ -10,7 +10,7 @@ import platform
 import random
 import aiohttp
 
-#from src.bots.Discord.kafkaMessages import kafka_producer_message
+from app.src.bots.producer.kafkaProducer import kafka_producer_message
 
 
 class UserCommands(commands.Cog, name= "lidarhd" ):
@@ -40,12 +40,14 @@ class UserCommands(commands.Cog, name= "lidarhd" ):
         """
         username = context.author.name
         print(f'Message transferred to the bacalhau compute job: {Xcoord, YCoord, username}')
-        #kafka_producer_message(Xcoord=Xcoord, Ycoord=YCoord, username=username)
+        kafka_producer_message(Xcoord=Xcoord, Ycoord=YCoord, username=username)
 
     @commands.command(name="getting status", describes="gets the output status of the compute job")
     @app_commands.describe(scope="defines the details about the current job status")
     async def get_status(self,context: Context, jobId: str):
         print("the status of the your previous job by {} of given jobId {} is follows:".format(context.author.name,jobId))
+
+
 
 async def setup(bot):
     await bot.add_cog(UserCommands(bot))

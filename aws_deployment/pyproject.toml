@@ -5,7 +5,6 @@ description = "scripts that generate AWS cloud formation template to replicate t
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "aws_deployment"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -18,6 +17,7 @@ graphviz = "^0.20.1"
 
 [tool.poetry.scripts]
 architecture = "aws-deployment:diagrams"
+
 
 
 [build-system]

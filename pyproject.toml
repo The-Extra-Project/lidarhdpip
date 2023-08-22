@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "lidarhd_pip"
-version = "0.1.0"
+version = "0.0.1"
 description = "microservices application for rendering geospatial point cloud data into tiles"
 authors = ["Dhruv Malik<malikdhruv1994@gmail.com>"]
+packages = [
+{ include = "app" },
+{include = "aws-deployment"},
+{include = "bacalau"},
+{include = "georender"}]
 
-
-[]
-
+[tool.poetry.dependencies]
+app = "^0.0.1"

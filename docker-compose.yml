@@ -4,9 +4,7 @@ services:
     build: 
       context: .
       dockerfile: ./georender/Dockerfile.pdal
-    image: lxet/lidar_geocoordinate
-    # depends_on:
-    #   - bacalau
+    image: lxet/lidar_geocoordinate_bot
     
     volumes:
       - /usr/app/georender/:/usr/app/georender/
@@ -14,26 +12,18 @@ services:
     ports:
       - 8501
 
-
   bacalau:
     build: 
       context: ./bacalau
       dockerfile: ./bacalau/Dockerfile.bacalau
     image: lxet/las_processing_bacalau
-    
 
-  twitter-bot:
-    build: 
-      context: ./twitter_bot/
-      dockerfile: ./twitter_bot/Dockerfile.tweepy
+    ports:
+      - 8502
 
-  streamlit_app:
+  circumbot:
     build:
-      context: ./streamlit_app/
-      dockerfile: ./streamlit_app/Dockerfile.streamlit
-    depends_on:
-      - kafka
-      - twitter_bot
-
-
-
+      context: ./app/
+      dockerfile: ./Docker/Dockerfile
+    volumes:
+      - ./app/src/bots/Discord/:/usr/src/app/discordbot/:rw

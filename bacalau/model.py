@@ -18,6 +18,8 @@ class InputParametersPoint():
     coordY: str
     username: str
     ipfs_image: str
+    ipfs_pipeline: str
+    filename_shp:str
     dockerimage: str
 
     

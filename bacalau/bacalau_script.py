@@ -28,8 +28,10 @@ def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
     params[0]: is the X coordinate of the geometric coordinates
     params[1]: is the Y coordinate of the geometric coordinates
     params[2]: username of the discord that wants to execute the job
-    params[3]: ipfsImage is the cid link for the shp and other mapping files stored from https://pcrs.ign.fr/version3
-    params[4]: name of the docker image 
+    params[3]:  cid link for the shp file. 
+    params[4]   cid link of pipeline template.
+    params[5]: filename of the shp file that you want to render.
+    params[6]: name of the docker image. 
     '''
 
     # dockerImg: str, params:InputParametersPoint
@@ -37,7 +39,9 @@ def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
     coordX:str = parameter.coordX
     coordY = parameter.coordY
     username = parameter.username
-    ipfs_details = parameter.ipfs_image
+    ipfs_shp_details = parameter.ipfs_image
+    ipfs_pipeline_details = parameter.ipfs_pipeline
+    shpFile = parameter.filename_shp
     dockerImg = parameter.dockerimage
   
     InputJob = dict(
@@ -49,7 +53,7 @@ def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
         publisher_spec= PublisherSpec("ipfs"),
         docker=JobSpecDocker(
             image=dockerImg,
-            entrypoint=[coordX, coordY, username, ipfs_details]
+            entrypoint=[coordX, coordY, username, ipfs_shp_details,ipfs_pipeline_details, shpFile]
         ),
         language=JobSpecLanguage(job_context=None),
         wasm=None,

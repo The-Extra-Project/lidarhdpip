@@ -18,11 +18,8 @@ class InputParametersPoint():
     coordY: str
     username: str
     ipfs_image: str
+    dockerimage: str
 
-class JobComputation(BaseModel):
-    username: str
-    coordX: str
-    coordY: str
     
 class JsonReturnFormat(BaseModel):
     json_format: Union[dict, str] 

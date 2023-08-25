@@ -3,6 +3,12 @@ name = "bacalau-script"
 version = "0.0.1"
 description = "wrapper script on top of bacalau sdk to schedule the compute jobs of the given georendering pipeline"
 readme = "./README.md"
+authors = ["Dhruv"]
 
 [tool.poetry.dependencies]
-python = "> 3.5"
+python = ">=3.8.1,<3.9.7 || >3.9.7,<3.12"
+bacalhau-sdk = "^1.0.3"
+kafka = "^1.3.5"
+python-dotenv = "^1.0.0"
+pydantic = "^2.3.0"
+

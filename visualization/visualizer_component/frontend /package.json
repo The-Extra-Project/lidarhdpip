@@ -1,0 +1,30 @@
+{
+  "name": "visualizer_component",
+  "version": "0.1.0",
+  "description": "component using giro3D in order to render the 3Dtiles.",
+  "main": "container.tsx",
+  "scripts": {
+    "test": "jest",
+    "build": "react-scripts build",
+    "start": "react-scripts start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@giro3d/giro3d": "^0.27.1-demo.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "streamlit-component-lib": "^2.0.0",
+    "three": "^0.148.0",
+    "tsc": "^2.0.4",
+    "typescript": "^3.2.1 || ^4"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.197",
+    "shx": "^0.3.4",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-glsl-loader": "^1.0.1"
+  }
+}

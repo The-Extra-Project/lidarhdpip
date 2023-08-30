@@ -9,7 +9,6 @@ from bacalau.bacalau_script import *
 load_dotenv(dotenv_path='../../.env')
 config = dotenv_values(dotenv_path='../../.env')
 
-
 logger = logging.getLogger("discord_bot")
 logger.setLevel(logging.INFO)
 

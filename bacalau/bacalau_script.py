@@ -2,9 +2,8 @@
 bacalau script that deploys the georender dockerised container on the bacalau.
 this will be called by the kafka topic once there is compute bandwidth available.
 """
-
 import json
-from model import JobResults, JsonReturnFormat, InputParametersPoint
+from model import JobResults, InputParametersPoint
 from bacalhau_apiclient.models.deal import Deal
 from bacalhau_apiclient.models.job_spec_docker import JobSpecDocker
 from bacalhau_apiclient.models.job_spec_language import JobSpecLanguage
@@ -16,8 +15,9 @@ from bacalhau_sdk.config import get_client_id
 from bacalhau_sdk.api import results, states
 from dotenv import load_dotenv, dotenv_values
 import sys
+import pprint
 
-load_dotenv(dotenv_path='./.env')
+load_dotenv(dotenv_path='.env')
 config = dotenv_values(dotenv_path='.env')
 
 
@@ -100,12 +100,54 @@ def getJobResults(clientId: str):
     """
 
     try:
-       return results(clientId)
-
+        resultData = results(clientId)
+        vectorize_outputs(resultData)
     except Exception as h:
         print(h)
 
-test = True
+def vectorize_outputs(data:dict):
+    """
+    gets the succinct output results from the json file.
+    
+    Parameters
+    -----------
+    jsonOutput is the json format resultinng from the results api function. 
+    
+    Returns the formatted response from 
+    
+    """
+    """
+    {'results': [{'data': {'cid': 'QmYEqqNDdDrsRhPRShKHzsnZwBq3F59Ti3kQmv9En4i5Sw',
+                       'metadata': None,
+                       'name': 'job-710a0bc2-81d1-4025-8f80-5327ca3ce170-shard-0-host-QmYgxZiySj3MRkwLSL4X2MF5F9f2PMhAE3LV49XkfNL1o3',
+                       'path': None,
+                       'source_path': None,
+                       'storage_source': 'IPFS',
+                       'url': None},
+              'node_id': 'QmYgxZiySj3MRkwLSL4X2MF5F9f2PMhAE3LV49XkfNL1o3',
+              'shard_index': None}]
+              
+              }
+    """
+    vectorized_result = {}
+    results = data["results"]
+
+    for params in results:
+        param_dict = params["data"]
+        vectorized_result[param_dict["name"]] = {
+        "cid": results["cid"],
+        "metadata": results["metadata"],
+        "path": results["path"],
+        "source_path": results["source_path"],
+        "storage_source": results["storage_source"],
+        "url": results["url"],  
+        "node_id": params["node_id"]
+        }
+    
+    
+    pprint.pprint(vectorized_result,indent=4)   
+
+
 
 if __name__ == "__main__":
     inputParams: InputParametersPoint = InputParametersPoint

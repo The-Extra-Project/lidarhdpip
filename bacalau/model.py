@@ -29,10 +29,4 @@ class JsonReturnFormat(BaseModel):
 
 class JobResults(BaseModel):
     resultingIds: List[str]
-
-class ClientJobComputationMapping(BaseModel):
-    client_id: str	
-    job_id: str	
-    job_status: JobComputation 	
-    docker_image_name: str	
     

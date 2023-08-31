@@ -1,8 +1,0 @@
-[tool.poetry]
-name="web3storage"
-version="0.1.0"
-description = "package for interacting with the web3.storage service"
-authors=["Dhruv Malik"]
-
-[tool.poetry.dependencies]
-kafka = {path = "../kafka/"}

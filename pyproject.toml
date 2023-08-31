@@ -1,13 +1,22 @@
+
 [tool.poetry]
 name = "lidarhd_pip"
-version = "0.0.1"
-description = "microservices application for rendering geospatial point cloud data into tiles"
+version = "0.1.0"
+description = "microservices application for rendering geospatial pointcloud data on bacalhau"
 authors = ["Dhruv Malik<malikdhruv1994@gmail.com>"]
 packages = [
-{ include = "app" },
-{include = "aws-deployment"},
-{include = "bacalau"},
-{include = "georender"}]
+{ include = "bacalau"},
+{ include = "bots"},
+{include = "visualization"},
+{ include = "aws_deployment"}
+]
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 
 [tool.poetry.dependencies]
-app = "^0.0.1"
+python = "^3.8"
+commitizen = "^3.7.0"
+
+[tool.poetry.dev-dependencies]

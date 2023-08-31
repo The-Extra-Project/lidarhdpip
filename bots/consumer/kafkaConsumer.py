@@ -1,7 +1,6 @@
 import platform
 from kafka import  KafkaConsumer
 from dotenv import load_dotenv, dotenv_values
-#from fastapi import FastAPI
 import json
 import logging
 
@@ -55,6 +54,8 @@ def kafka_consume_message_jobResult(self,topic: str, keyID: str) -> json:
     [cid, nodeId, path] = parameters
     
     print("results of given job is:  {}{}{}".format(cid,nodeId,path))
+    ## fetching the result.
+    return [cid,path] 
 
 def kafka_consume_result_status(keyID: str):
     topic = 'bacalau_list_jobs'

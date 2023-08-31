@@ -4,9 +4,7 @@ version="0.1.0"
 description = "package to host the bot application along with messaging stream"
 readme="README.md"
 authors=["Dhruv Malik"]
-include = [
-{ path = "consumer" }, {path = "Discord"}, {path = "producer"}
-]
+
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.9.7 || >3.9.7"

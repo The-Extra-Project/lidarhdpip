@@ -1,0 +1,36 @@
+name: testing current infrastructure deployment checks
+on:
+    push:
+        branches:
+            - feature/* ## TODO: need to mention in the CONTRIBUTING.md  and readme file regarding the branch naming conventions.
+            - dev-adding-v0.1
+            - main
+            paths:
+                - "aws_deployment/infrastructure/**"
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+        env:
+            working-directory: ../../aws_deployment 
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: running_infrastructure_scripts
+              run: sh  infra_deployment_checks.sh
+            ## if the execution of the script gets completed successfully, then echo the message 
+            - name: checks for successful stack upgrade.
+              run: |
+                if [ $? -eq 0 ]; then
+                echo "Infrastructure deployment checks passed successfully"
+                else
+                  echo "Infrastructure deployment checks failed, remove the dangling resources using your awscli"
+                fi
+
+# TODO: add a check for the version number in the setup.py file.
+# TODO: add a check for the version number in the docs/conf.py file.
+#
+                
+
+
+
+    

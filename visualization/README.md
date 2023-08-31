@@ -1,13 +1,6 @@
 # Lidarbot/Visualization:
 
-This application package renders 3D view of the reconstructed mesh by [bacalhau](../bacalau/) computation result.
-
-## Credits to:
-- [discord-bot-template](https://github.com/kkrypt0nn/Python-Discord-Bot-Template). 
-- [streamlit-component](https://github.com/streamlit/component-template).
-
-## Tech stack:
-1. upstash : for integrating the bot with the kafka service.
+This application package renders 3D view of the reconstructed mesh by [bacalhau](../bacalau/) result.
 
 ## build instructions:
 1.  Defining the parameters for the bots:
@@ -20,10 +13,19 @@ This application package renders 3D view of the reconstructed mesh by [bacalhau]
         
         - invite your bots by replacing the generated parameters using the url given [here](https://discord.com/oauth2/authorize?&client_id=1138054674696650842&scope=bot+applications.commands&permissions=2048):  
 
+    2. Run the docker container.
+    ```bash
+    $ docker-compose build visualization
+    ```
 
+    3. Then enter the parameters : 
+        - Stored bacalhau file 3DTile files
 
+    and then the corresponding format is uploaded.
 
-2. Run the docker container.
-
-
+## Prod-Deployment:
 For more information regarding the deployment on cloud, checkout the [aws_deployment](../aws_deployment/) setup.
+
+## Credits to:
+- [discord-bot-template](https://github.com/kkrypt0nn/Python-Discord-Bot-Template). 
+- [streamlit-component](https://github.com/streamlit/component-template).

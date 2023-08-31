@@ -1,4 +1,0 @@
-py3dtiles
-streamlit
-confluent_kafka
-w3storage

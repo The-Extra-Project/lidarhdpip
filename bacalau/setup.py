@@ -10,7 +10,5 @@ setup(
     long_description_content_type="text/markdown",
     author="author_name",
     packages=find_packages(exclude=["tests", ".github"]),
-    entry_points={
-        "console_scripts": ["project_name = project_name.__main__:main"]
-    },
+    
 )

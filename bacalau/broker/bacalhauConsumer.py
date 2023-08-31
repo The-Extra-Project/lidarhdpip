@@ -56,7 +56,7 @@ def kafka_consume_message_jobCommand_point(background_tasks: BackgroundTasks) ->
     
     print("job has started for:  {}{}{}".format(Xcoordinate, Ycoord, ipfs, dockername, username))
     
-    background_tasks.add_task(func=kafka_producer_Job_result)
+    #background_tasks.add_task(func=kafka_producer_Job_result)
     
     
 

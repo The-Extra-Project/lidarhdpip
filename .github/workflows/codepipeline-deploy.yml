@@ -11,9 +11,13 @@ jobs:
     Build:
         runs-on: ubuntu-latest
         env:
-            working-directory: ../../aws_deployment 
+            working-directory: aws_deployment/
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
         steps:
             - uses: actions/checkout@v3
+            - uses: youyo/aws-cdk-github-actions@v2 ## TODO: not used for now, will do once the ci_cd script is written and if there is need.
 
             - name: running_infrastructure_scripts
               run: sh  infra_deployment_checks.sh
@@ -25,10 +29,6 @@ jobs:
                 else
                   echo "Infrastructure deployment checks failed, remove the dangling resources using your awscli"
                 fi
-
-# TODO: add a check for the version number in the setup.py file.
-# TODO: add a check for the version number in the docs/conf.py file.
-#
                 
 
 

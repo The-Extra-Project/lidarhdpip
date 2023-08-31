@@ -191,22 +191,12 @@ function onRender(event:Event) : void {
   // Get the RenderData from the event
   const data = (event as CustomEvent<RenderData>).detail
 
-
   let tilesetReference = data.args["tilesetURL"]
-   let Xcoord = data.args["Xcoord"]
-   let Ycoord = data.args["Ycoord"]
-
+  let Xcoord = data.args["Xcoord"]
+  let Ycoord = data.args["Ycoord"]
 
    renderparameters(tilesetReference, Xcoord,Ycoord)
-
-   
-
-
-
 }
-
-
-
 
 Streamlit.events.addEventListener(
     Streamlit.RENDER_EVENT, onRender

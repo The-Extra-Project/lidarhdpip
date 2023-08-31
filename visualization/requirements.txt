@@ -1,0 +1,12 @@
+py3dtiles
+streamlit
+w3storage
+
+## for bots:
+python-decouple==3.8
+jinja2
+mongoengine
+uvicorn
+confluent_kafka
+fastapi
+httpx

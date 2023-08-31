@@ -15,4 +15,6 @@ RUN poetry config virtualenvs.create false
 COPY . /usr/src/app/visualization
 
 
+EXPOSE 8053
+
 CMD ["streamlit run ", "app.py"]

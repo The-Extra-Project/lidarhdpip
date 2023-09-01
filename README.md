@@ -1,16 +1,39 @@
-# LidarhdBot
+# LidarhdBot 🗺️ 🤖
 
-Bot application for running geospatial 3D mesh reconstruction algorithms on decentralised compute via discord messages.
+**Bot application for running geospatial 3D mesh reconstruction algorithm on Compute over Data  framework.**
 
+<p align="left">
+ <a href="https://github.com/The-Extra-Project/Lidarhdpip/blob/dev-adding-v0.1/LICENSE.md" alt="License">
+ <img src="https://img.shields.io/badge/license-MIT-green" />
+   </a>
 
-## Status
-- [Docker-compose-passing](https://github.com/The-Extra-Project/lidarhdpip/actions/workflows/test-docker-build.yml/badge.svg).
-- [Codepipeline-deploy](https://github.com/The-Extra-Project/lidarhdpip/actions/workflows/test-docker-build.yml/badge.svg).
+  <a href="https://github.com/The-Extra-Project/Lidarhdpip/releases" alt="Release">
+        <img src="https://img.shields.io/github/v/release/The-Extra-Project/lidarhdpip?display_name=tag" />
+  </a>
+ <a href="https://github.com/The-Extra-Project/lidarhdpip/pulse" alt="Activity">
+        <img src="https://img.shields.io/github/commit-activity/m/The-Extra-Project/lidarhdpip" />
+    </a>
+    <a href="https://img.shields.io/github/downloads/The-Extra-Project/lidarhdpip/total">
+        <img src="https://img.shields.io/github/downloads/The-Extra-Project/lidarhdpip/total" alt="total downloads">
+    </a>
+    <a href="https://github.com/The-Extra-Project/lidarhdpip/actions/workflows/test-docker-build.yml" alt="Test deployment">
+        <img src="https://github.com/The-Extra-Project/lidarhdpip/actions/workflows/test-docker-build.yml.yml/badge.svg" />
+    </a>
+    <a href="https://www.extralabs.xyz/">
+        <img alt="Extra labs website" src="https://img.shields.io/badge/website-theextralabs.xyz-red">
+    </a>
+    <a href="https://twitter.com/intent/follow?screen_name=lab_dao">
+        <img src="https://img.shields.io/twitter/follow/lab_dao?style=social&logo=twitter" alt="follow on Twitter">
+    </a>
+    <a href="https://discord.gg/Qmqf2U4Y9Y" alt="Discord">
+    <img src="https://dcbadge.vercel.app/api/server/Qmqf2U4Y9Y" />
+    </a>
+</p>
 
 
 ## Stack:
 
-- **Serverless messaging using**: [upstash]().
+- **Serverless messaging using**: [upstash]() and [AWS lambda]().
 
 - **rendering visualization using**: [Streamlit]().
 
@@ -20,24 +43,14 @@ Bot application for running geospatial 3D mesh reconstruction algorithms on dece
 
 - **bot service running on top of**[discord.py]:  
 
-## Credits 
-
--  [bert lidar rendering pipeline](https://github.com/bertt/nimes):For the description concerning the geosptial data reconstruction algorithms. 
-
-- [Dockerised discord bot template]()
-
-- [kafka examples]()
-
 ## packages description:
 
-1. [Georender](./georender/): Core package that implements the functions to convert the given pointcloud file to .laz 3D tile format.
 
-2. [Bots](./bots/): Package for discord bot logic and commands.
+1. [Bots](./bots/): Package for discord bot logic and commands.
 
-3. [aws_deployment](./aws_deployment/): Scripts to deploy the necessary infrastructure on registered AWS cloud.
+2. [aws_deployment](./aws_deployment/): Scripts to deploy the necessary infrastructure on registered AWS cloud.
 
-4. [visualization](): This is the rendering app written in streamlit that shows the result once the mesh reconstruction job is completed
-
+3. [visualization](./visualization/): This is the rendering app written in streamlit that shows the result once the mesh reconstruction job is completed.
 
 ## Build instructions/Setup:
 
@@ -73,48 +86,39 @@ cdk bootstrap
         - https://pcrs.ign.fr/version3
 
 
-
-
 ### API's
 
 discord bot api
 ```markdown
 /circum job_point <<Xcoordiante>> <<Ycoordinate>> <<ipfs_shp_file>> <<ipfs_pipeline_template_file>> : runs the reconstruction job for the given point coordinate and returns the job id.
 
-/circum status <<job_id>>: checks status of the reconstruction job with given id.
+/circum get_status <<job_id>>: checks status of the reconstruction job with given id generated.
 
 /circum result <<job_id>>: fetches the result (laz file cid) once the job is completed.
 
-/circum visualize <<ipfs_cid>>: generated laz file visualization link.
+/circum visualize <<ipfs_cid>> <<Xoordinate>>  <<Ycoordinates>> :  generated laz file visualization link.
 ```
-# Detailled pipeline of the circum reconstruction process:
+
+
+# Detailled pipeline of the application working process:
 
 ```mermaid
 ---
-title: 3DP
+title: lidarhd-bot
 ---
-flowchart LR
-    user["`frontend with geo-coordinated tweet`"]
-    confluentKafka["`submits the job for the bot`"]
-    connector["that triggers the command when there is B/W"]
-    botScript["`serverless script that
-    - takes the input job request
-    - calls the bacalau.py script to spin up new instance
-    - passes the params coordinates to compute the resulting 3D file output
-    `"]
-    user-->confluentKafka
-    confluentKafka-->connector
-    connector--> botScript
-    botScript --> job1
-    botScript --> job2
-    botScript --> ...
-    botScript --> jobN
-
-    job1 --> bacalau-publisher
-    job2 --> bacalau-publisher
-    jobN --> bacalau-publisher
-    bacalau-publisher-->connector:Streaminng-results
-    connector:Streaminng-results-->user
+sequenceDiagram
+    User->>Discord: /circum reconstruction-job <<X coordinate>>
+    Alice->>+John: John, can you hear me?
+    John-->>-Alice: Hi Alice, I can hear you!
+    John-->>-Alice: I feel great!
+   
 ```
 
+
+## Credits 
+
+-  [bert lidar rendering pipeline](https://github.com/bertt/nimes): For the description concerning the geosptial data reconstruction algorithms. 
+
+- [Dockerised discord bot template](https://github.com/): Template for running discord bot in docker container.
+ 
 

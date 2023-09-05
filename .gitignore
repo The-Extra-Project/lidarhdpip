@@ -1,0 +1,15 @@
+datas/
+.venv/
+lidathdpip_env/
+.pytest_cache/
+web3storage/venv.web3storage
+**/.env
+**/.config.json
+
+**/node_modules
+
+**/__pycache__
+
+**/build
+**/**.egg-info
+**/dist

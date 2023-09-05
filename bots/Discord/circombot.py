@@ -6,11 +6,10 @@ import platform
 import random
 import sys
 
-
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
-from bots.Discord.circombot import kafka_consume_message_jobResult
+from bots.consumer.kafkaConsumer import kafka_consume_message_jobResult
 
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
@@ -21,12 +20,11 @@ except FileNotFoundError as notFound:
 
 intents = discord.Intents.default()
 
-bot = Bot(
+bot: Bot = Bot(
 command_prefix= "/",
 intents=intents,
 help_command=None,
 )
-
 
 ## taken from krypt0nn repo that renders them in the prettify way:
 
@@ -62,7 +60,7 @@ class LoggingFormatter(logging.Formatter):
 
 
 
-logger = logging.getLogger("discord_bot")
+logger = logging.FileHandler("discord.log")
 logger.setLevel(logging.INFO)
 
 # Console handler
@@ -212,6 +210,6 @@ async def load_cogs() -> None:
         bot.logger.error(f"Failed to load extension from commands.py")
         
 asyncio.run(load_cogs())
-bot.run(config["token"])
+bot.run(config["token"], )
 
 

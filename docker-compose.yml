@@ -5,10 +5,8 @@ services:
       context: ./bots/
       dockerfile: ./Dockerfile
     image: devextralabs/discord-bot
-    
     volumes:
-      - /usr/app/georender/:/usr/app/georender/
-
+      - ./bots:/usr/src/app/discordbot
     ports:
       - 8501
 
@@ -17,16 +15,17 @@ services:
       context: ./bacalau
       dockerfile: ./Dockerfile
     image: devextralabs/bacalau-job-script
-
+    volumes:
+      - ./bacalau/:/usr/src/app/
     ports:
       - 8502
-
-
+  
   visualization:
     build:
       context: ./visualization
       dockerfile: ./Dockerfile
     image: devextralabs/visualization-web
-
+    volumes:
+      - ./visualization/:/usr/src/app/
     ports:
       - 8503

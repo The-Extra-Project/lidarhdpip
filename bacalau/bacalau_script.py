@@ -36,7 +36,7 @@ def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
 
     # dockerImg: str, params:InputParametersPoint
     
-    coordX:str = parameter.coordX
+    coordX = parameter.coordX
     coordY = parameter.coordY
     username = parameter.username
     ipfs_shp_details = parameter.ipfs_image

@@ -102,13 +102,6 @@ discord bot api
 
 # Detailled pipeline of the application working process:
 
-```mermaid
----
-title: lidarhd-bot
----
-   
-```
-
 
 ## Credits 
 

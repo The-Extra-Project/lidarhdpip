@@ -9,7 +9,7 @@ WORKDIR /usr/src/app/discordbot/
 ## PATH="/root/.local/bin:$PATH"
 ENV PATH=" ${PATH}:/root/.local/bin" 
 
-RUN curl -sSL https://install.python-poetry.org | python3 - && poetry install && poetry config virtualenvs.create false
+RUN curl -sSL https://install.python-poetry.org | python3 - && /root/.local/bin/poetry  install && /root/.local/bin/poetry  config virtualenvs.create false
 
 FROM build
 

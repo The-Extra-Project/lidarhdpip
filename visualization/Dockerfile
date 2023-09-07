@@ -6,13 +6,7 @@ COPY pyproject.toml /usr/src/app/visualization/pyproject.toml
 
 WORKDIR /usr/src/app/visualization   
 
-ENV PATH = "${PATH}:/root/.local/bin"
-
-
-RUN curl -sSL https://install.python-poetry.org | python3 -  && poetry install
-
-
-
+RUN curl -sSL https://install.python-poetry.org | python3 -  && /root/.local/bin/poetry  install
 
 
 FROM python:3.8
@@ -23,7 +17,7 @@ COPY --from=build /usr/src/app/visualization /usr/src/app/visualization
 
 WORKDIR /
 
-RUN poetry config virtualenvs.create false
+RUN /root/.local/bin/poetry  config virtualenvs.create false
 
 COPY . /usr/src/app/visualization
 

@@ -1,0 +1,6 @@
+FastAPI
+boto3
+bacalhau_sdk
+uvicorn
+python-dotenv
+httpx

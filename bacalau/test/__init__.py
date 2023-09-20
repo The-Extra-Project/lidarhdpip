@@ -1,1 +1,0 @@
-"test pacakge for the bacalau script"

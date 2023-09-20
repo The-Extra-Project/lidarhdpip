@@ -1,9 +1,9 @@
 {
     "prefix": "/circum",
-    "token": "MTEzODA1NDY3NDY5NjY1MDg0Mg.GqVl7d.FkH23z6QvDlMLEsIFBwQJB10WSAhjw6WruEZ9A",
+    "token": "",
     "permissions": "2048", 
-    "application_id": "1138054674696650842",
-    "public_key": "135473b9bd170a39c751ac34beb73902f68d10c661c81d693df45e1d628ff143",
+    "application_id": "",
+    "public_key": "",
     "sync_commands_globally": true,
     "owners": [
     5706, 9739

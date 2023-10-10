@@ -1,6 +1,6 @@
 # LidarhdBot 🗺️ 🤖
 
-**Bot application for running geospatial 3D mesh reconstruction algorithm on Compute over Data  framework.**
+**Bot application for running geospatial 3D mesh reconstruction algorithms on Compute over Data framework.**
 
 <p align="left">
  <a href="https://github.com/The-Extra-Project/Lidarhdpip/blob/dev-adding-v0.1/LICENSE.md" alt="License">
@@ -46,7 +46,7 @@
 ## packages description:
 
 
-1. [Bots](./bots/): Package for discord bot logic and commands.
+1. [Bots](./bots/): Package for discord bot logic and commands which integrates with kafka and eventually AWS.
 
 2. [aws_deployment](./aws_deployment/): Scripts to deploy the necessary infrastructure on registered AWS cloud.
 
@@ -57,34 +57,37 @@
 ### 1. Locally running the bot:
 
 1. We need to set following enviornment variables 
-    - For the kafka messaging service. the reference env file is defined in the `.env.example` here. 
+    - For the kafka messaging service. the reference env file is defined in the `.env.example` [here](./.env.example). 
     - Then define the discord configuration in the config.json in 'bots/Discord/config.json', by following the steps defined [here](https://github.com/topics/discord-bot-template).
+    - Setup the personal [web3.storage]() account format and define the access token in the .env file.
 
 
-2. Then build the container application by running the Dockerfile for the streamlit and subsequentially that of the bacalau_sdk service.
+2. Then build the container application by running the docker-compose file: 
+```
+cocker compose build 
+```
+
+3. Go to the corresponding channel for which you've added the code and then call the functions as defined by the #API section.
+
 
 ### 2. On cloud instance (AWS): 
 
-1. Setup the awscli parameters for the account and access token.  
+1. Setup the awscli parameters (i.e account and access token) in the env variable.  
 
 2. Then run the scripts as defined below.
-
-
 ```sh
 cd aws_deployment/ && cdk synth
 # if its for the first time , you will be prompted to run the following command also
 cdk bootstrap
 ```
 
-- Follow the instructions in the [readme]() of the aws_repository in order to provide the necessary permissions to your account in order to address errors.
+- Follow the instructions in the [readme](./aws_deployment/README.md) of the aws_repository in order to provide the necessary permissions to your account in order to address errors.
 
-4. Setup the personal [web3.storage]() account and define the access token in the .env file.
 
 5. Store the files on web3.storagefrom where you want to fetch the mapping format (shape/obj files). we have stored the reference files in [data/](./datas/) . and then keep the reference cid generated for the user as parameter to pass for generating the  reconstruction job. 
     - for more detials regarding the files latest version, checkout the following
         - https://geoservices.ign.fr/lidarhd
         - https://pcrs.ign.fr/version3
-
 
 ### API's
 

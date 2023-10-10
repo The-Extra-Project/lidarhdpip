@@ -1,7 +1,6 @@
 FROM --platform=linux/amd64 python:3.11.1  as build 
 
 RUN mkdir -p /usr/src/app/discordbot/
-
 COPY pyproject.toml  /usr/src/app/discordbot/pyproject.toml
 
 WORKDIR /usr/src/app/discordbot/
@@ -9,11 +8,12 @@ WORKDIR /usr/src/app/discordbot/
 ## PATH="/root/.local/bin:$PATH"
 ENV PATH=" ${PATH}:/root/.local/bin" 
 
-RUN curl -sSL https://install.python-poetry.org | python3 - && /root/.local/bin/poetry  install && /root/.local/bin/poetry  config virtualenvs.create false
+#RUN curl -sSL https://install.python-poetry.org | python3 - && /root/.local/bin/poetry  install && /root/.local/bin/poetry  config virtualenvs.create false
+## installing dependencies
 
-FROM build
 
-COPY . /usr/src/app/discordbot/
+
+FROM build as run
 
 COPY --from=build /usr/src/app/discordbot/ /usr/src/app/discordbot/
 

@@ -5,8 +5,8 @@ on:
             - feature/* ## TODO: need to mention in the CONTRIBUTING.md  and readme file regarding the branch naming conventions.
             - dev-adding-v0.1
             - main
-            paths:
-                - "aws_deployment/infrastructure/**"
+        paths:
+            - "aws_deployment/infrastructure/**"
 jobs:
     Build:
         runs-on: ubuntu-latest

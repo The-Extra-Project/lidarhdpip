@@ -5,7 +5,6 @@ version = "0.1.0"
 description = "microservices application for rendering geospatial pointcloud data on bacalhau"
 authors = ["Dhruv Malik<malikdhruv1994@gmail.com>"]
 packages = [
-{ include = "bacalau"},
 { include = "bots"},
 {include = "visualization"},
 { include = "aws_deployment"}

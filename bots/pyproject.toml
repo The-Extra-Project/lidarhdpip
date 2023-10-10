@@ -18,16 +18,10 @@ pytest = "^7.4.0"
 fastapi = "^0.101.1"
 dpytest = "^0.7.0"
 
-
-
-[tool.poetry.plugins] # Optional super table
-
 [tool.poetry.plugins."src.bots.Discord.circombot"]
 export = "src.plugings:Circombot"
 
-
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 

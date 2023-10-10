@@ -9,7 +9,7 @@ import sys
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
-from bots.consumer.kafkaConsumer import kafka_consume_message_jobResult
+from consumer.kafkaConsumer import kafka_consume_message_jobResult
 
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
@@ -17,7 +17,6 @@ try:
 except FileNotFoundError as notFound:
     print(notFound)
     
-
 intents = discord.Intents.default()
 
 bot: Bot = Bot(
@@ -26,7 +25,7 @@ intents=intents,
 help_command=None,
 )
 
-## taken from krypt0nn repo that renders them in the prettify way:
+## taken from krypt0nn repo that renders the logs them in the prettify way:
 
 class LoggingFormatter(logging.Formatter):
     # Colors
@@ -57,8 +56,6 @@ class LoggingFormatter(logging.Formatter):
         format = format.replace("(green)", self.green + self.bold)
         formatter = logging.Formatter(format, "%Y-%m-%d %H:%M:%S", style="{")
         return formatter.format(record)
-
-
 
 logger = logging.FileHandler("discord.log")
 logger.setLevel(logging.INFO)
@@ -133,7 +130,7 @@ async def on_command_completion(context: Context) -> None:
     executed_command = str(split[0])
     if context.guild is not None:
         bot.logger.info(
-            f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id})"
+            f"Executed {executed_command}  by {context.author} + '&' +(ID: {context.author.id})"
         )
     else:
         bot.logger.info(
@@ -210,6 +207,6 @@ async def load_cogs() -> None:
         bot.logger.error(f"Failed to load extension from commands.py")
         
 asyncio.run(load_cogs())
-bot.run(config["token"], )
+bot.run(config["token"])
 
 

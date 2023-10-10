@@ -16,9 +16,6 @@ from bacalhau_sdk.config import get_client_id
 from bacalhau_sdk.api import results, states
 from dotenv import dotenv_values
 
-import sys
-import pprint
-
 
 logging.getLogger('boto3').setLevel(logging.CRITICAL)
 config = dotenv_values(dotenv_path='.env')

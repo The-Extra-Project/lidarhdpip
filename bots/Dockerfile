@@ -6,7 +6,7 @@ COPY requirements.txt  /usr/src/app/discordbot/requirements.txt
 WORKDIR /usr/src/app/discordbot/
 
 
-RUN pip install --user --upgrade pip && pip install --no-cache-dir -r requirements.txt
+RUN pip install  --upgrade pip && pip install  -r requirements.txt
 
 ## PATH="/root/.local/bin:$PATH"
 ENV PATH=" ${PATH}:/root/.local/bin" 

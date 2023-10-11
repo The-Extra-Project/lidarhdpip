@@ -90,6 +90,3 @@ def kafka_produce_pipeline_reconstruction(username, Xcoord, Ycoord,ipfs_shp_file
     key=username, 
     value=(username + ',' + Xcoord +','+ Ycoord +','+ ipfs_shp_file + ',' + pipeline_filename + ',' + surface_reconstruction_pipeline + ',' + algorithmType).encode('utf-8'))
   
-
-
-def kafka_

@@ -9,7 +9,7 @@ import sys
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
-from consumer.kafkaConsumer import kafka_consume_message_jobResult
+from bots.consumer import kafkaConsumer
 
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
@@ -100,7 +100,7 @@ async def on_ready() -> None:
 @tasks.loop(minutes=1.0)
 async def sending_results_job(ctx:Context):
     bot.logger.info("Checking for new job results...")
-    result = kafka_consume_message_jobResult(topic='bacalhau_job_compute', keyID=ctx.author.id)
+    result = kafkaConsumer.kafka_consume_message_jobInput(topic='bacalhau_job_compute', keyID=ctx.author.id)
     ctx.reply("hi {}, the compute is scheduled and the progress is {}".format(ctx.author,ctx.args))
     
 

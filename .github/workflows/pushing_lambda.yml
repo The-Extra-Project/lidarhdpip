@@ -1,0 +1,27 @@
+## adding CI script that pushes the docker builds to the amazon ECR certificate 
+name: push ECR container registerries
+on:
+    push:
+        branches:
+            - v0.2
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v3
+
+            - name: building discord bot at the start
+              run: docker compose run bots 
+
+            - name: pushing the build to ECR
+              id: ecr
+              uses: jwalton/gh-ecr-push@v1
+              with:
+                access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                region: us-east-1
+                image: devextralabs/discord-bot:latest
+
+              
+

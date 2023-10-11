@@ -16,3 +16,18 @@ services:
       dockerfile: ./Dockerfile
     image: 
       devextralabs/job_scheduler
+  
+  
+  visualization:
+    build:
+      context: ./visualization
+      dockerfile: ./Dockerfile
+    image: devextralabs/visualization-web
+    volumes:
+      - ./visualization/:/usr/src/app/
+    ports:
+      - 8000
+
+    depends_on:
+      - bots
+      - bacalau

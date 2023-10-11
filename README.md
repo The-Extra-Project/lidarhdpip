@@ -22,8 +22,8 @@
     <a href="https://www.extralabs.xyz/">
         <img alt="Extra labs website" src="https://img.shields.io/badge/website-theextralabs.xyz-red">
     </a>
-    <a href="https://twitter.com/intent/follow?screen_name=lab_dao">
-        <img src="https://img.shields.io/twitter/follow/lab_dao?style=social&logo=twitter" alt="follow on Twitter">
+    <a href="https://twitter.com/intent/follow?screen_name=extralabs">
+        <img src="https://img.shields.io/twitter/follow/extralabs?style=social&logo=twitter" alt="follow on Twitter">
     </a>
     <a href="https://discord.gg/Qmqf2U4Y9Y" alt="Discord">
     <img src="https://dcbadge.vercel.app/api/server/Qmqf2U4Y9Y" />
@@ -46,11 +46,13 @@
 ## packages description:
 
 
-1. [Bots](./bots/): Package for discord bot logic and commands which integrates with kafka and eventually AWS.
+1. [Bots](./bots/): Package for discord  and twitter bot logic and commands which integrates with kafka and eventually AWS.
 
 2. [aws_deployment](./aws_deployment/): Scripts to deploy the necessary infrastructure on registered AWS cloud.
 
 3. [visualization](./visualization/): This is the rendering app written in streamlit that shows the result once the mesh reconstruction job is completed.
+
+
 
 ## Build instructions/Setup:
 

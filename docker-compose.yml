@@ -28,6 +28,6 @@ services:
     ports:
       - 8000
 
-    depends_on:
-      - bots
-      - bacalau
+  #   depends_on:
+  #     - bots
+  #     - bacalau

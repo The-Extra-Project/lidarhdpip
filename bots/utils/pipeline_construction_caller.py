@@ -23,64 +23,64 @@ config = dotenv_values(dotenv_path='.env')
 
 surface_reconstruction = 'devextralabs/bacalhau_surface_reconstruction'
 
-# def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
-#     '''
-#     pulls the docker image of georender and executes it on the bacalau compute network
-#     for example, in the case of the georender, it will be as follows:
-#     params[0]: is the X coordinate of the geometric coordinates
-#     params[1]: is the Y coordinate of the geometric coordinates
-#     params[2]: username of the discord that wants to execute the job
-#     params[3]:  cid link for the shp file. 
-#     params[4]   cid link of pipeline template.
-#     params[5]: filename of the shp file that you want to render.
-#     params[6]: name of the docker image. 
-#     '''
+def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
+    '''
+    pulls the docker image of georender and executes it on the bacalau compute network
+    for example, in the case of the georender, it will be as follows:
+    params[0]: is the X coordinate of the geometric coordinates
+    params[1]: is the Y coordinate of the geometric coordinates
+    params[2]: username of the discord that wants to execute the job
+    params[3]:  cid link for the shp file. 
+    params[4]   cid link of pipeline template.
+    params[5]: filename of the shp file that you want to render.
+    params[6]: name of the docker image. 
+    '''
 
-#     # dockerImg: str, params:InputParametersPoint
+    # dockerImg: str, params:InputParametersPoint
     
-#     coordX = parameter.coordX
-#     coordY = parameter.coordY
-#     username = parameter.username
-#     ipfs_shp_details = parameter.ipfs_image
-#     ipfs_pipeline_details = parameter.ipfs_pipeline
-#     shpFile = parameter.filename_shp
-#     dockerImg = parameter.dockerimage
+    coordX = parameter.coordX
+    coordY = parameter.coordY
+    username = parameter.username
+    ipfs_shp_details = parameter.ipfs_image
+    ipfs_pipeline_details = parameter.ipfs_pipeline
+    shpFile = parameter.filename_shp
+    dockerImg = parameter.dockerimage
   
-#     InputJob = dict(
-#         APIBeta= 'v0.1',
-#             ClientID=get_client_id(),
-#     Spec=Spec(
-#         engine="Docker",
-#         verifier="Noop",
-#         publisher_spec= PublisherSpec("ipfs"),
-#         docker=JobSpecDocker(
-#             image=dockerImg,
-#             entrypoint=[coordX, coordY, username, ipfs_shp_details,ipfs_pipeline_details, shpFile]
-#         ),
-#         language=JobSpecLanguage(job_context=None),
-#         wasm=None,
-#         resources=None,
-#         timeout=1800,
-#         outputs=[
-#             StorageSpec(
-#                 storage_source="IPFS",
-#                 name="outputs",
-#                 path="/outputs",
-#             )
-#         ],
-#         deal=Deal(concurrency=1, confidence=0, min_bids=0),
-#         do_not_track=False,
-#     ),
-#     )
+    InputJob = dict(
+        APIBeta= 'v0.1',
+            ClientID=get_client_id(),
+    Spec=Spec(
+        engine="Docker",
+        verifier="Noop",
+        publisher_spec= PublisherSpec("ipfs"),
+        docker=JobSpecDocker(
+            image=dockerImg,
+            entrypoint=[coordX, coordY, username, ipfs_shp_details,ipfs_pipeline_details, shpFile]
+        ),
+        language=JobSpecLanguage(job_context=None),
+        wasm=None,
+        resources=None,
+        timeout=1800,
+        outputs=[
+            StorageSpec(
+                storage_source="IPFS",
+                name="outputs",
+                path="/outputs",
+            )
+        ],
+        deal=Deal(concurrency=1, confidence=0, min_bids=0),
+        do_not_track=False,
+    ),
+    )
 
-#     try:
-#         job_json_details = json.loads(submit(InputJob))
-#         print(job_json_details)
-#             #jobresults = JobComputation(job)
+    try:
+        job_json_details = json.loads(submit(InputJob))
+        print(job_json_details)
+            #jobresults = JobComputation(job)
 
-#         return job_json_details
-#     except SystemError as s:
-#         print(s)
+        return job_json_details
+    except SystemError as s:
+        print(s)
     
 
 

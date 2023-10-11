@@ -7,3 +7,5 @@ watchdog
 pytest
 fastapi
 dpytest
+twarc
+fastapi[all]

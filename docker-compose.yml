@@ -3,7 +3,7 @@ services:
   bots:
     build: 
       context: ./bots/
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.discord
     image: devextralabs/discord-bot
     volumes:
       - ./bots:/usr/src/app/discordbot

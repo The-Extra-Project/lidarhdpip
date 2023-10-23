@@ -2,8 +2,6 @@ name: testing current infrastructure deployment checks
 on:
     push:
         branches:
-            - feature/* ## TODO: need to mention in the CONTRIBUTING.md  and readme file regarding the branch naming conventions.
-            - dev-adding-v0.1
             - main
         paths:
             - "aws_deployment/infrastructure/**"
@@ -20,7 +18,7 @@ jobs:
             - uses: youyo/aws-cdk-github-actions@v2 ## TODO: not used for now, will do once the ci_cd script is written and if there is need.
 
             - name: running_infrastructure_scripts
-              run: sh  infra_deployment_checks.sh
+              run: python ../../aws_deployment/app.py
             ## if the execution of the script gets completed successfully, then echo the message 
             - name: checks for successful stack upgrade.
               run: |

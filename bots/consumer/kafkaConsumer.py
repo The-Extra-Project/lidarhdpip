@@ -1,3 +1,9 @@
+
+"""
+this script consumes the job from the producer and invokes the pipeline of the job_scheduler
+
+"""
+
 import platform
 from kafka import  KafkaConsumer
 from dotenv import load_dotenv, dotenv_values
@@ -5,41 +11,29 @@ import logging
 import json
 import time
 import os
-from utils.pipeline_construction_caller import  execute_reconstruction_pipeline
+#from bots.utils.pipeline_construction_caller import  execute_reconstruction_pipeline
 
 from utils.model_helper import InputParametersPoint
 
-"""
-this script consumes the job from the producer and invokes the pipeline 
-"""
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 log=logging.getLogger("discord")
 
 load_dotenv(dotenv_path='./../.env')
-config = {**dotenv_values(dotenv_path='../../.env')}
 
-# server_details = os.getenv("KAFKA_BROKER_URL")
-# sasl_plain_username=os.getenv("SASL_PLAIN_USERNAME")
-# sasl_plain_password=os.getenv("SASL_PLAIN_PASSWORD")
-
-
-
-
-#print(server_details)
 
 consumer: KafkaConsumer = KafkaConsumer(
           bootstrap_servers=['growing-krill-8066-eu1-kafka.upstash.io:9092' ],
   sasl_mechanism='SCRAM-SHA-256',
   security_protocol='SASL_SSL',
-  sasl_plain_username= 'Z3Jvd2luZy1rcmlsbC04MDY2JCQqQu2eRNWf9N05-qGiH_wR8ikh6aZJgkpqoLc',
-  sasl_plain_password='YmJjMTU1MGEtMjJmNS00OGY5LWE1YTYtYzQ3YTU4YjQ2YTVj',
+  sasl_plain_username= os.getenv("SASL_PLAIN_USERNAME"),
+  sasl_plain_password=os.getenv("SASL_PLAIN_PASSWORD"),
         auto_offset_reset='earliest',
         consumer_timeout_ms=1000
     )
     
-def kafka_consume_message_jobInput(topic: str = 'bacalhau_compute_job', username: str = "" ) -> list(str):
+def kafka_consume_message_jobInput(topic: str = 'bacalhau_compute_job', username: str = "" ):
     """
     This consumes the bot input command messages and parameters and then parses and runs the corresponding job on the pipeline
     

@@ -1,15 +1,19 @@
 import asyncio
 import json
-import logging
 import os
 import platform
 import random
 import sys
-
+import logging
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
+
+sys.path.append('../../')
+from bots.Discord.loggingFormatter import LoggingFormatter
 from bots.consumer import kafkaConsumer
+from  bots.producer import kafkaProducer
+from  bots.Discord.Commands import setup
 
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
@@ -18,6 +22,7 @@ except FileNotFoundError as notFound:
     print(notFound)
     
 intents = discord.Intents.default()
+intents.message_content = True
 
 bot: Bot = Bot(
 command_prefix= "/",
@@ -26,38 +31,7 @@ help_command=None,
 )
 
 ## taken from krypt0nn repo that renders the logs them in the prettify way:
-
-class LoggingFormatter(logging.Formatter):
-    # Colors
-    black = "\x1b[30m"
-    red = "\x1b[31m"
-    green = "\x1b[32m"
-    yellow = "\x1b[33m"
-    blue = "\x1b[34m"
-    gray = "\x1b[38m"
-    # Styles
-    reset = "\x1b[0m"
-    bold = "\x1b[1m"
-    
-    COLORS = {
-        logging.DEBUG: gray + bold,
-        logging.INFO: blue + bold,
-        logging.WARNING: yellow + bold,
-        logging.ERROR: red,
-        logging.CRITICAL: red + bold,
-    }
-
-    def format(self, record):
-        log_color = self.COLORS[record.levelno]
-        format = "(black){asctime}(reset) (levelcolor){levelname:<8}(reset) (green){name}(reset) {message}"
-        format = format.replace("(black)", self.black + self.bold)
-        format = format.replace("(reset)", self.reset)
-        format = format.replace("(levelcolor)", log_color)
-        format = format.replace("(green)", self.green + self.bold)
-        formatter = logging.Formatter(format, "%Y-%m-%d %H:%M:%S", style="{")
-        return formatter.format(record)
-
-logger = logging.FileHandler("discord.log")
+logger = logging.getLogger("discord.log")
 logger.setLevel(logging.INFO)
 
 # Console handler
@@ -156,36 +130,6 @@ async def on_command_error(context: Context, error) -> None:
         )
         await context.send(embed=embed)
  
-        """
-        Same as above, just for the @checks.is_owner() check.
-        """
-        embed = discord.Embed(
-            description="You are not the owner of the bot!", color=0xE02B2B
-        )
-        await context.send(embed=embed)
-        if context.guild:
-            bot.logger.warning(
-                f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the guild {context.guild.name} (ID: {context.guild.id}), but the user is not an owner of the bot."
-            )
-        else:
-            bot.logger.warning(
-                f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the bot's DMs, but the user is not an owner of the bot."
-            )
-    elif isinstance(error, commands.MissingPermissions):
-        embed = discord.Embed(
-            description="You are missing the permission(s) `"
-            + ", ".join(error.missing_permissions)
-            + "` to execute this command!",
-            color=0xE02B2B,
-        )
-        await context.send(embed=embed)
-    elif isinstance(error, commands.BotMissingPermissions):
-        embed = discord.Embed(
-            description="I am missing the permission(s) `"
-            + ", ".join(error.missing_permissions)
-            + "` to fully perform this command!",
-            color=0xE02B2B,
-        )
         await context.send(embed=embed)
     elif isinstance(error, commands.MissingRequiredArgument):
         embed = discord.Embed(
@@ -199,14 +143,16 @@ async def on_command_error(context: Context, error) -> None:
         raise error
 
 
-async def load_cogs() -> None:
+async def load_cogs(bot) -> None:
     try:
         await bot.load_extension(f"Commands")
+        
+        await setup(bot=bot)
         bot.logger.info("commands package loaded")
     except Exception as e:
         bot.logger.error(f"Failed to load extension from commands.py")
         
-asyncio.run(load_cogs())
+asyncio.run(load_cogs(bot=bot))
 bot.run(config["token"])
 
 

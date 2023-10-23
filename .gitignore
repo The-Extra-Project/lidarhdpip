@@ -5,7 +5,7 @@ lidathdpip_env/
 .pytest_cache/
 web3storage/venv.web3storage
 **/.env
-**/.config.json
+**/config.json
 
 **/node_modules
 

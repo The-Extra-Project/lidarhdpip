@@ -1,0 +1,28 @@
+FROM --platform=linux/amd64 python:3.11.1  as build 
+
+RUN mkdir -p /usr/src/app/bots/
+COPY requirements.txt  /usr/src/app/bots/requirements.txt
+
+
+WORKDIR /usr/src/app/bots/
+
+
+RUN pip install  --upgrade pip && pip install  -r requirements.txt
+
+ENV PATH=" ${PATH}:/root/.local/bin" 
+
+## copying the remaining folders for circumbot deployment.
+COPY . .
+
+## also .env separately from the  root folder 
+
+COPY ../../.env ../../.env
+
+FROM build as run
+
+
+COPY --from=build /usr/src/app/bots/ /usr/src/app/bots/
+
+WORKDIR /usr/src/app/bots/Discord
+
+CMD [ "python3", "circombot.py" ]

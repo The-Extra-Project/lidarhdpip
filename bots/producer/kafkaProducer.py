@@ -3,12 +3,9 @@ from kafka import KafkaProducer
 import time
 import logging
 import sys
-
-#from fastapi import FastAPI
-
-load_dotenv(dotenv_path='./../.env')
-config = { **dotenv_values(dotenv_path='./../.env') }
-
+import os
+load_dotenv(dotenv_path='../../.env')
+config = dotenv_values(dotenv_path='./../.env') 
 logger = logging.getLogger("discord_bot")
 logger.setLevel(logging.INFO)
 
@@ -17,11 +14,11 @@ global producer
 
 
 producer = KafkaProducer(
-  bootstrap_servers=[config["KAFKA_BROKER_URL"]],
+  bootstrap_servers=[os.getenv("KAFKA_BROKER_URL")],
   sasl_mechanism='SCRAM-SHA-256',
   security_protocol='SASL_SSL',
-  sasl_plain_username=config["SASL_PLAIN_USERNAME"],
-  sasl_plain_password=config["SASL_PLAIN_PASSWORD"],
+  sasl_plain_password= os.getenv("SASL_PLAIN_PASSWORD"),
+  sasl_plain_username= os.getenv("SASL_PLAIN_USERNAME"),
 )
 
 ## kafka compute operations: 
@@ -40,19 +37,25 @@ def kafka_producer_job(Xcoord: str, Ycoord: str, username: str, ipfs_shp_file, i
     print("Sending msg \"{} <> {} <> {} <> {} <> {}   \"".format(Xcoord, Ycoord, username, ipfs_shp_file, ipfs_filename_template)) 
 
 
-def kafka_producer_polygon(coordinates: list(str),username: str, ipfs_shp_file, ipfs_filename_template ):
+def kafka_producer_polygon(coordinates: str,username: str, ipfs_shp_file, ipfs_filename_template ):
   """
   transfers the message entered by user to invoke the discord command to generate the reconstructed polygon shapefile
+  coordinates: its the coagulated string of the parameters
+    - for single point cropping: (X,Y), for polygon: (Xmax,Xmin,Ymax,Ymin) 
+  
+  
   """
+  
+  params = [].append(coordinates.split(','))
   
   time.sleep(5)
   producer.send(
         topic="bacalhau_compute_job",
         key= username,
-        value=(coordinates + ',' + username + ',' + ipfs_shp_file+ ',' + ipfs_filename_template).encode('utf-8'))
+        value=(params + ',' + username + ',' + ipfs_shp_file+ ',' + ipfs_filename_template).encode('utf-8'))
   
   logger.log(msg="send the message to bacalhau service")
-  print("Sending msg \"{} <> {} <> {} <> {} <> {}   \"".format(coordinates, username, ipfs_shp_file, ipfs_filename_template)) 
+  print("Sending msg \"{} <> {} <> {} <> {} <> {}   \"".format(params, username, ipfs_shp_file, ipfs_filename_template)) 
 
 def kafka_produce_get_status(jobId: str, username: str):
   """

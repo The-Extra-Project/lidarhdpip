@@ -1,6 +1,6 @@
 # LidarhdBot 🗺️ 🤖
 
-**Bot application for running geospatial 3D mesh reconstruction algorithms on Compute over Data framework.**
+**Bot application for running geospatial algorithms on Compute over Data framework.**
 
 <p align="left">
  <a href="https://github.com/The-Extra-Project/Lidarhdpip/blob/dev-adding-v0.1/LICENSE.md" alt="License">

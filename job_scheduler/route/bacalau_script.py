@@ -20,7 +20,8 @@ from dotenv import dotenv_values
 logging.getLogger('boto3').setLevel(logging.CRITICAL)
 config = dotenv_values(dotenv_path='.env')
 
-client = boto3.client('ecs', region_name='us-east-1')
+client = boto3.client('ecs', region_name='us-east-1', aws_secret_access_key=os.getenv("SECRET_KEY_AWS"))
+api_client = boto3.client('apigateway', region_name="us-east-1")
 
 router = APIRouter(
     prefix="/jobs",
@@ -28,13 +29,15 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 #fargate_ecr_endpoint = ""
 
-@router.get("/requestJob")
-async def runPipeline(request: Request, response: Response):
+@router.get("/requestJob/surface_reconstruction/ECS")
+async def runpipeline_ECS(request: Request, response: Response):
     '''
     It parses the input parameters from requests(consisting of the parameters of the compute job). 
-    then pulls the docker image of reconstruction-pipline and executes it on ECS (which in turn runs the )
+    then pulls the docker image of reconstruction-pipline and executes it on the ECS which schedules it to the bacalhau node.
+    )
     
     the input parameters are planned as follows
     coordX 
@@ -83,6 +86,8 @@ async def runPipeline(request: Request, response: Response):
 
     except SystemError as s:
         print(s)
+
+
 @router.get("/state/{job_id}")
 def get_state(clientID: str, response: Response):
     """

@@ -4,3 +4,4 @@ bacalhau_sdk
 uvicorn
 python-dotenv
 httpx
+pytest

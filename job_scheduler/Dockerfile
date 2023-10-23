@@ -16,5 +16,5 @@ FROM build as run
 
 COPY --from=build /app/ /app/
 
-CMD [ "python3", "main.py" ]
+CMD [ "python3", "/app/main.py" ]
 

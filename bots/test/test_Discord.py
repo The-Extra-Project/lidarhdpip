@@ -1,6 +1,6 @@
 import dpytest
 from  bots.Discord.circombot import  bot
-from  bots.Discord.Commands import job_point, get_status
+from  bots.Discord.cogs.Commands import job_point, get_status
 import asyncio
 import discord.ext.test as dpytest
 

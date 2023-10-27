@@ -5,3 +5,4 @@ uvicorn
 python-dotenv
 httpx
 pytest
+kafka

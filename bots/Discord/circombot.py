@@ -1,25 +1,21 @@
-import asyncio
+
 import json
 import os
 import platform
-import random
 import sys
+
+sys.path.append(os.path.abspath('../../'))
+
 import logging
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
 from storage import Database
-from bots.Discord.cogs.Commands import UserCommands
 import aiosqlite
-
-sys.path.append(os.path.abspath(__file__))
-
 from bots.Discord.loggingFormatter import LoggingFormatter
-import time
-
 from bots.consumer.kafkaConsumer import  kafka_consume_list_jobs
-from bots.producer.kafkaProducer import  kafka_produce_pipeline_reconstruction
-
+from bots.producer.kafkaProducer import  kafka_producer_job
+from discord import app_commands
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
         config = json.load(file)
@@ -27,7 +23,8 @@ except FileNotFoundError as notFound:
     print(notFound)
     
 intents = discord.Intents.default()
-intents.message_content = True
+client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(client)
 
 bot: Bot = Bot(
 command_prefix= "/circum",
@@ -87,7 +84,6 @@ class Circumbot(commands.Bot):
         bot.logger.info("-------------------")
        
         await self.init_db()
-       # await self.bot_status.start()
         await self.load_cogs()
         self.db = Database(
             connection= await aiosqlite.connect(
@@ -103,47 +99,22 @@ class Circumbot(commands.Bot):
             with open(f"{os.path.realpath(os.path.dirname(__file__))}/storage/schema.sql") as _file:
                 await db.executescript(_file.read())
             await db.commit()
-    
-    # @tasks.loop(minutes=2.0)
-    # async def bot_status(self):
-    #     """
-    #     TODO: defines whether the jobs in the pipeline are available in order to serve the user requests
-    #     """
-    #     status = ["just_started", "available", "bandwidth not available"]
-    #     if self.current_bw >= 90:
-    #         await self.change_presence(activity=discord.Game("circumbot SR"), status=discord.Status.do_not_disturb)
-    #     else:
-    #         await self.change_presence(activity=discord.Game("circumbot SR"),status=discord.Status.online)
-    
+
     async def load_cogs(self):
         """
-        sets up the user command template based on the various job profiles 
-        
-        """
-        
-        for file in os.listdir(f"{os.path.realpath(os.path.dirname(__file__))}/cogs"):
-            if file.endswith(".py"):
-                extension = file[:-3]
-                try:
-                    await self.load_extension(f"cogs.{extension}")
-                    self.logger.info(f"loadded commands from '{extension}'")
-                except Exception as e:
-                    self.logger.error(
-                    f"command loading failed"
-                    )
-            
-    # @bot.command()
-    # async def get_status(self,context: Context):
-    #     print("the status of the your previous job by {} of given jobID:".format(context.author.name))
-    #     username = context.author.name
-    #     time.sleep(10)
-    #     kafka_consume_list_jobs(topic='bacalhau_result_job',keyID=username)
-
-
-    # #@commands.hybrid_command(name="surfacereconstruction", description="takes the 3D point cloud in las format and generates the corresponding polygon representation of file in ply format")
-    # async def do_surface_reconstruction_pipeline_point(self, context: Context, Xcoord, YCoord,ipfs_shp_file, ipfs_template_file,  in_file: str, algorithm_category: int ):
-    #     print(f'Message transferred to the bacalhau surface reconstruction job: {in_file, algorithm_category}')
-    #     kafka_produce_pipeline_reconstruction(username=context.author.name, pathInputlasFile=in_file, Xcoord=Xcoord, YCoord=YCoord, ipfs_shp_file=ipfs_shp_file,ipfs_template_file=ipfs_template_file)        
+        sets up the user command template based on the various pipelines. 
+        """   
+        _file = os.listdir(f"{os.path.realpath(os.path.dirname(__file__))}/cogs")
+        # if _file.endswith(".py"):
+        extension = _file[1] ## now selecting only UserCommands
+        #     self.logger.info(extension)
+        try:
+            await self.load_extension(f"cogs.Commands")
+            self.logger.info(f"loadded commands from '{extension}'")
+        except Exception as e:
+            self.logger.error(e
+            )
+    
     
     @bot.event
     async def on_message(self,message: discord.Message) -> None:
@@ -157,8 +128,9 @@ class Circumbot(commands.Bot):
         
         try:
             await bot.process_commands(message)
-        
-        
+        except Exception as e:
+            print('message not able to be processed a cause de' + e)
+       ## kafka_producer_job("demo", "1", "2", "ABCD", "oefzijfiojsdfj")
         await message.reply("hiya, check your job status")    
         
 
@@ -182,7 +154,7 @@ class Circumbot(commands.Bot):
                 f"Executed {executed_command} command by {context.author} (ID: {context.author.id}) in DMs"
             )
 
-
+    @bot.event
     async def on_command_error(context: Context, error) -> None:
         """
         The code in this event is executed every time a normal valid command catches an error.

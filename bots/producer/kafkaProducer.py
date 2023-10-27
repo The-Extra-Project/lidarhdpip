@@ -30,10 +30,9 @@ def kafka_producer_job(Xcoord: str, Ycoord: str, username: str, ipfs_shp_file, i
     time.sleep(5)
     producer.send(
         topic="bacalhau_compute_job",
-        key= username,
         value=(Xcoord + ',' + Ycoord +',' + username + ',' + ipfs_shp_file+ ',' + ipfs_filename_template).encode('utf-8'),
         )
-    logger.log(msg="send the message to bacalhau service")
+    logger.log(msg="send the message to bacalhau service", level=logging.DEBUG)
     print("Sending msg \"{} <> {} <> {} <> {} <> {}   \"".format(Xcoord, Ycoord, username, ipfs_shp_file, ipfs_filename_template)) 
 
 

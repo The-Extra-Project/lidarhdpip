@@ -11,7 +11,7 @@ import os
 from constructs import Construct
 
 """
-Credits to [aws-cdk examples](https://github.com/aws-samples/aws-cdk-examples) for the reference examples. 
+Credits to [aws-cdk examples](https://github.com/aws-samples/aws-cdk-examples) for the basic template. 
 """
 class InfrastructureStack(Stack):
     job_scheduler: _lambda.DockerImageFunction

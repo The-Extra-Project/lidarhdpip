@@ -23,7 +23,7 @@ class RequestCityGMLReconstruction(BaseModel):
     
     
     
-def create_job_task():
+def create_job_task_surface_reconstruction():
     
     parameters : Request = {
         "xcoord": '34',
@@ -37,5 +37,3 @@ def create_job_task():
     
     assert response.status_code == 200
     
-def get_values():
-    pass

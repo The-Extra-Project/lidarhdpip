@@ -81,24 +81,6 @@ def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
         return job_json_details
     except SystemError as s:
         print(s)
-    
-
-
-def execute_reconstruction_pipeline(
-    Xcoord="43.2946",
-    Ycoord="5.3695",
-    username="test",
-    ipfs_shp_file="bafkreicxd6u4avrcytevtvehaaimqbsqe5qerohji2nikcbfrh6ccb3lgu",
-    filename="pipeline_template.json",
-    algorithm_surface_reconstruction="0", #(poisson)
-                ):
-    """
-    function to call the hosted pipeline construction container on ECS which will in turn run the intermediate series of computations on the bacalhau
-    """
-    
-    pass
-    
-
 
 
 def listJobs() -> JobResults:
@@ -176,7 +158,7 @@ def vectorize_outputs(data:dict):
 #     algorithm_file = paramsReconstruction.algo
     
 
-
+test = True
 
     
 

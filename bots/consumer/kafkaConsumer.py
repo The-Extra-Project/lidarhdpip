@@ -11,7 +11,7 @@ import logging
 import json
 import time
 import os
-#from bots.utils.pipeline_construction_caller import  execute_reconstruction_pipeline
+from bots.utils.pipeline_construction_caller import  createJobBacalauPoint
 
 from utils.model_helper import InputParametersPoint
 
@@ -68,7 +68,7 @@ def kafka_consume_message_jobInput(topic: str = 'bacalhau_compute_job', username
     jobParameter.filename_shp = params[3]
     jobParameter.ipfs_image = params[4]
     jobParameter.username = params[5]    
-    #createJobBacalauPoint(jobParameter)
+    createJobBacalauPoint(jobParameter)
     
     #return parameters
 

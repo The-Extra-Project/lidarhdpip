@@ -13,9 +13,7 @@ ENV PATH=" ${PATH}:/root/.local/bin"
 
 ## copying the remaining folders for circumbot deployment.
 COPY . .
-
 ## also .env separately from the  root folder 
-
 COPY ../../.env ../../.env
 
 FROM build as run

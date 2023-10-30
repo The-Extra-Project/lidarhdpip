@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath('../../'))
 
 import logging
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 from discord.ext.commands import Bot, Context
 from storage import Database
 import aiosqlite
@@ -16,6 +16,7 @@ from bots.Discord.loggingFormatter import LoggingFormatter
 from bots.consumer.kafkaConsumer import  kafka_consume_list_jobs
 from bots.producer.kafkaProducer import  kafka_producer_job
 from discord import app_commands
+
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
         config = json.load(file)

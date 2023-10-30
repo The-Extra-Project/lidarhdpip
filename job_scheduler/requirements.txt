@@ -6,3 +6,4 @@ python-dotenv
 httpx
 pytest
 kafka
+fastapi-scheduler

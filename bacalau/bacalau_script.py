@@ -3,7 +3,11 @@ bacalau script that deploys the georender dockerised container on the bacalau.
 this will be called by the kafka topic once there is compute bandwidth available.
 """
 import json
+import uvicorn
 from model import JobResults, InputParametersPoint
+from broker.bacalhauConsumer import kafka_consume_message_jobCommand_point, kafka_consume_result_status
+from broker.bacalhauProducer import kafka_producer_Job_result
+from fastapi import FastAPI
 from bacalhau_apiclient.models.deal import Deal
 from bacalhau_apiclient.models.job_spec_docker import JobSpecDocker
 from bacalhau_apiclient.models.job_spec_language import JobSpecLanguage
@@ -21,7 +25,13 @@ load_dotenv(dotenv_path='.env')
 config = dotenv_values(dotenv_path='.env')
 
 
-def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
+app = FastAPI(
+    root_path="/bacalau"
+)
+
+
+@app.post("/job_point/")
+def createJobBacalauPoint(coordX, coordY, username, ipfs_image, ipfs_pipeline, filename_shp,   ) -> any:
     '''
     pulls the docker image of georender and executes it on the bacalau compute network
     for example, in the case of the georender, it will be as follows:
@@ -36,13 +46,13 @@ def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
 
     # dockerImg: str, params:InputParametersPoint
     
-    coordX:str = parameter.coordX
-    coordY = parameter.coordY
-    username = parameter.username
-    ipfs_shp_details = parameter.ipfs_image
-    ipfs_pipeline_details = parameter.ipfs_pipeline
-    shpFile = parameter.filename_shp
-    dockerImg = parameter.dockerimage
+    coordX:str = coordX
+    coordY = coordY
+    username = username
+    ipfs_shp_details = ipfs_image
+    ipfs_pipeline_details = ipfs_pipeline
+    shpFile = filename_shp
+    dockerImg = 'devextralabs/georender'
   
     InputJob = dict(
         APIBeta= 'v0.1',
@@ -74,8 +84,7 @@ def createJobBacalauPoint(parameter: InputParametersPoint) -> any:
     try:
         job_json_details = json.loads(submit(InputJob))
         print(job_json_details)
-            #jobresults = JobComputation(job)
-
+        kafka_producer_Job_result()
         return job_json_details
     except SystemError as s:
         print(s)
@@ -87,6 +96,7 @@ def listJobs() -> JobResults:
     """
     try:
         resultingJobs = JobResults(states(get_client_id()))
+        kafka_consume_result_status(resultingJobs[-1])
         return resultingJobs
     except SystemError as s:
         print(s)
@@ -149,10 +159,8 @@ def vectorize_outputs(data:dict):
 
 
 
+
+
+
 if __name__ == "__main__":
-    inputParams: InputParametersPoint = InputParametersPoint
-    if (test == True):
-    ## passing the parameters via the cli params (for testing)
-        [inputParams.coordX , inputParams.coordY, inputParams.username, inputParams.ipfs_image, inputParams.dockerimage] = sys.argv[1:6]
-        print( ''+"parameters finalized: {},{},{},{},{} ".format(inputParams.coordX , inputParams.coordY, inputParams.username, inputParams.ipfs_image, inputParams.dockerimage))
-        createJobBacalauPoint(inputParams)
+    uvicorn.run('127.0.0.1', port=8000)

@@ -3,8 +3,9 @@ from kafka import KafkaProducer
 import time
 import logging
 import sys
+import os
 #from fastapi import FastAPI
-
+from typing import List
 
 
 load_dotenv(dotenv_path='../../.env')
@@ -14,50 +15,57 @@ config = dotenv_values(dotenv_path='../../.env')
 logger = logging.getLogger("discord_bot")
 logger.setLevel(logging.INFO)
 
-
 global producer
 
-
 producer = KafkaProducer(
-  bootstrap_servers=[config["KAFKA_BROKER_URL"]],
+  bootstrap_servers=[os.getenv("KAFKA_BROKER_URL")],
   sasl_mechanism='SCRAM-SHA-256',
   security_protocol='SASL_SSL',
-  sasl_plain_username=config["SASL_PLAIN_USERNAME"],
-  sasl_plain_password=config["SASL_PLAIN_PASSWORD"],
+  sasl_plain_username=os.getenv("SASL_PLAIN_USERNAME"),
+  sasl_plain_password=os.getenv("SASL_PLAIN_PASSWORD"),
 )
 
 
 
-## kafka compute operations: 
-def kafka_producer_job(Xcoord: str, Ycoord: str, username: str, ipfs_shp_file, ipfs_filename_template):
+## kafka cropping functions: 
+def kafka_producer_job_cropPoint(Xcoord: str, Ycoord: str, username: str, ipfs_shp_file, ipfs_filename_template):
     """
     transfers the message entered by the user from the discord input to the kafka broker queue destined for bacalhau container.
-    Xcoord: the X coord of the 
     """    
+    #print("test params fetch" + config)
+    final_values = [].append( i.encode('utf-8') for i in [Xcoord, Ycoord, username, ipfs_shp_file,ipfs_filename_template])
     
     time.sleep(5)
     producer.send(
         topic="bacalhau_compute_job",
-        key= username,
-        value=(Xcoord + ',' + Ycoord +',' + username + ',' + ipfs_shp_file+ ',' + ipfs_filename_template).encode('utf-8'),
+        key= username.encode(encoding="utf-8"),
+        value=("final_values").encode('utf-8'),
         )
-    logger.log(msg="send the message to bacalhau service")
-    print("Sending msg \"{} <> {} <> {} <> {} <> {}   \"".format(Xcoord, Ycoord, username, ipfs_shp_file, ipfs_filename_template)) 
+    logger.log(msg="send the message to bacalhau service", level=logging.DEBUG)
+    print("Sending msg to producer\"{} <> {} <> {} <> {} <> {}   \"".format(Xcoord, Ycoord, username, ipfs_shp_file, ipfs_filename_template)) 
 
 
-def kafka_producer_polygon(coordinates: list(str),username: str, ipfs_shp_file, ipfs_filename_template ):
+
+def kafka_producer_polygon(coordinates: list,username: str, ipfs_shp_file, ipfs_filename_template ):
   """
   transfers the message entered by user to invoke the discord command to generate the reconstructed polygon shapefile
+  
   """
   
   time.sleep(5)
-  producer.send(
-        topic="bacalhau_compute_job",
-        key= username,
-        value=(coordinates + ',' + username + ',' + ipfs_shp_file+ ',' + ipfs_filename_template).encode('utf-8'))
   
-  logger.log(msg="send the message to bacalhau service")
-  print("Sending msg \"{} <> {} <> {} <> {} <> {}   \"".format(coordinates, username, ipfs_shp_file, ipfs_filename_template)) 
+  value_encoded = bytearray()
+  for coord in coordinates:
+    value_encoded+= (coord).encode('utf-8') 
+  
+  value_encoded+= (ipfs_filename_template).encode('utf-8') +  (ipfs_shp_file).encode('utf-8')
+
+  producer.send(
+        topic="bacalhau_crop_polygon",
+        key= username.encode(encoding='utf-8'),
+        value=value_encoded)
+
+  print("Sending msg \"{} <> {} <> {} <> {} <> {}\"".format(coordinates, username, ipfs_shp_file, ipfs_filename_template)) 
 
 def kafka_produce_get_status(jobId: str, username: str):
   """

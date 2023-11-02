@@ -1,39 +1,49 @@
 import platform
 from kafka import  KafkaConsumer
 from dotenv import load_dotenv, dotenv_values
-#from fastapi import FastAPI, BackgroundTasks
-from bacalau.broker.bacalhauProducer import kafka_producer_Job_result
-from bacalau_script import createJobBacalauPoint, listJobs , getJobResults
+from fastapi import FastAPI, BackgroundTasks
+#from bacalau_script import createJobBacalauPoint, listJobs , getJobResults
+import uvicorn
+from fastapi_scheduler import SchedulerAdmin
 import json
 import logging
-
+from fastapi_amis_admin.admin.settings import Settings
+from fastapi_amis_admin.admin.site import AdminSite
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+
+
 log = logging.getLogger("uvicorn")
 
-#app = FastAPI()
+app = FastAPI()
 
-load_dotenv(dotenv_path='.env')
-config = dotenv_values(dotenv_path='.env')
+admin = AdminSite(settings=Settings(database_url="sqlite+aiosqlite:///trigger.db"))
+admin.mount_app(app)
+
+scheduler = SchedulerAdmin.bind(admin)
+
+
+load_dotenv(dotenv_path='../../.env')
 
 global consumer
-
+ 
 
 consumer = KafkaConsumer(
-          bootstrap_servers=[config["KAFKA_BROKER_URL"]],
+          bootstrap_servers=[os.getenv("KAFKA_BROKER_URL")],
   sasl_mechanism='SCRAM-SHA-256',
   security_protocol='SASL_SSL',
-  sasl_plain_username=config["SASL_PLAIN_USERNAME"],
-  sasl_plain_password=config["SASL_PLAIN_PASSWORD"],
+  sasl_plain_username=os.getenv("SASL_PLAIN_USERNAME"),
+  sasl_plain_password=os.getenv("SASL_PLAIN_PASSWORD"),
         auto_offset_reset='earliest',
         consumer_timeout_ms=1000
     )
     
-## this function is called repreatedly to consume messages from kafka
-#@repeat.every()
-def kafka_consume_message_jobCommand_point(background_tasks: BackgroundTasks) -> any:
+## this function is called repreatedly to consume messages from kafka (i.e user commands)
+@scheduler.scheduled_job('interval', seconds=120)
+def kafka_consume_message_jobCommand_point() -> any:
     """
     this allows for messages to be consumed that are transferred by the discord bot
     returns true if the message is consumed and the command is executed.
@@ -52,12 +62,9 @@ def kafka_consume_message_jobCommand_point(background_tasks: BackgroundTasks) ->
     
     [Xcoordinate, Ycoord, ipfs, dockername, username] = parameter
     
-    submit_spec = createJobBacalauPoint(Xcoordinate, Ycoord, ipfs, dockername, username)
+#    submit_spec = createJobBacalauPoint(Xcoordinate, Ycoord, ipfs, dockername, username)
     
     print("job has started for:  {}{}{}".format(Xcoordinate, Ycoord, ipfs, dockername, username))
-    
-    #background_tasks.add_task(func=kafka_producer_Job_result)
-    
     
 
 def kafka_consume_result_status(keyID: str):
@@ -77,8 +84,9 @@ def kafka_consume_result_status(keyID: str):
     [cid, nodeId, path] = parameters
     
     
+    
+    
 test = True
 
 if __name__ == "__main__":
-    
-    kafka_consume_message_jobCommand_point()
+    uvicorn.run(host="127.0.0.1", port=8000)

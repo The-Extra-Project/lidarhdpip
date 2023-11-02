@@ -3,8 +3,8 @@ from kafka import KafkaProducer
 import time
 import logging
 import sys
-from bacalau.bacalau_script import *
-
+from fastapi_scheduler import SchedulerAdmin
+from fastapi import FastAPI
 
 load_dotenv(dotenv_path='../../.env')
 config = dotenv_values(dotenv_path='../../.env')
@@ -12,6 +12,9 @@ config = dotenv_values(dotenv_path='../../.env')
 logger = logging.getLogger("discord_bot")
 logger.setLevel(logging.INFO)
 
+app = FastAPI()
+
+scheduler = SchedulerAdmin.bind(app)
 
 global producer
 
@@ -23,7 +26,9 @@ producer = KafkaProducer(
   sasl_plain_password=config["SASL_PLAIN_PASSWORD"],
 )
 
-## kafka compute operations: 
+
+## kafka compute operations result: 
+@scheduler.scheduled_job(trigger='interval', seconds=120)
 def kafka_producer_Job_result():
     """
     returns the result to the given user georendered job from bacalau script.
@@ -39,7 +44,7 @@ def kafka_producer_Job_result():
     
     time.sleep(5)
     result = producer.send(
-        topic="bacalhau_result_job",
+        topic="bacalhau_compute_job",
         value=  JobResults.encode('utf-8'),
         )
     logger.info("send the message to bacalhau service")

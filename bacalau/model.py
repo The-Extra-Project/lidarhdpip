@@ -22,6 +22,12 @@ class InputParametersPoint():
     filename_shp:str
     dockerimage: str
 
+class InputParametersCityGML():
+    yamlFile: str
+    ObjFile: str
+    gmlOutputFile: str
+
+
     
 class JsonReturnFormat(BaseModel):
     json_format: Union[dict, str] 

@@ -1,0 +1,13 @@
+py3dtiles
+discord
+streamlit
+kafka-python
+python-dotenv
+watchdog
+pytest
+fastapi
+dpytest
+twarc
+fastapi[all]
+aiosqlite
+aws-cdk-lib

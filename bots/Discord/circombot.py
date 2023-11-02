@@ -6,11 +6,13 @@ import platform
 import random
 import sys
 
-
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
-from bots.Discord.circombot import kafka_consume_message_jobResult
+sys.path.append(os.path.abspath('../../'))
+
+from bots.consumer.kafkaConsumer import kafka_consume_message_jobResult
+from bots.Discord.Commands import UserCommands
 
 try:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
@@ -28,8 +30,7 @@ help_command=None,
 )
 
 
-## taken from krypt0nn repo that renders them in the prettify way:
-
+## taken from krypt0nn repo that renders the logs in prettify way for debug the issues:
 class LoggingFormatter(logging.Formatter):
     # Colors
     black = "\x1b[30m"
@@ -105,7 +106,7 @@ async def on_ready() -> None:
 @tasks.loop(minutes=1.0)
 async def sending_results_job(ctx:Context):
     bot.logger.info("Checking for new job results...")
-    result = kafka_consume_message_jobResult(topic='bacalhau_job_compute', keyID=ctx.author.id)
+    result = kafka_consume_message_jobResult(topic='bacalhau_job_compute', keyID=ctx.author.name)
     ctx.reply("hi {}, the compute is scheduled and the progress is {}".format(ctx.author,ctx.args))
     
 
@@ -119,9 +120,14 @@ async def on_message(message: discord.Message) -> None:
     """
     if message.author == bot.user or message.author.bot:
         return
-    await bot.process_commands(message)
-    message.reply("hiya, your job will be scheduled in a min")    
     
+    try:
+        output = await bot.process_commands(message)
+
+    except Exception as e:
+        print('error in execution of the command' +e)
+    
+    message.reply("hiya, your job will be scheduled in a min")
 
 @bot.event
 async def on_command_completion(context: Context) -> None:
@@ -210,7 +216,7 @@ async def load_cogs() -> None:
         bot.logger.info("commands package loaded")
     except Exception as e:
         bot.logger.error(f"Failed to load extension from commands.py")
-        
+
 asyncio.run(load_cogs())
 bot.run(config["token"])
 

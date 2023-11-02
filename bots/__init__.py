@@ -1,2 +1,3 @@
-from  Discord  import *
-from twitter  import *
+import sys
+
+sys.path.append('.')
